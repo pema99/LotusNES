@@ -1,4 +1,4 @@
-#LotusNES
+# LotusNES
 ## What is this?
 This is a fairly feature complete NES emulator written in C# mainly as a learning project. I would estimate that it runs about 80-90% of the NES library.
 
