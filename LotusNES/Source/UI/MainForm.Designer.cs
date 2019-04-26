@@ -41,6 +41,7 @@
             this.ComboResolution = new System.Windows.Forms.ComboBox();
             this.TabNetPlay = new System.Windows.Forms.TabPage();
             this.TabDebug = new System.Windows.Forms.TabPage();
+            this.ButtonGameGenie = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.NumberPort)).BeginInit();
             this.TabsMenu.SuspendLayout();
             this.TabFile.SuspendLayout();
@@ -236,6 +237,7 @@
             // TabSettings
             // 
             this.TabSettings.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.TabSettings.Controls.Add(this.ButtonGameGenie);
             this.TabSettings.Controls.Add(this.LabelVolume);
             this.TabSettings.Controls.Add(this.SliderVolume);
             this.TabSettings.Controls.Add(this.LabelResolution);
@@ -319,6 +321,16 @@
             this.TabDebug.TabIndex = 1;
             this.TabDebug.Text = "Debug";
             // 
+            // ButtonGameGenie
+            // 
+            this.ButtonGameGenie.Location = new System.Drawing.Point(6, 30);
+            this.ButtonGameGenie.Name = "ButtonGameGenie";
+            this.ButtonGameGenie.Size = new System.Drawing.Size(110, 23);
+            this.ButtonGameGenie.TabIndex = 16;
+            this.ButtonGameGenie.Text = "GameGenie menu";
+            this.ButtonGameGenie.UseVisualStyleBackColor = true;
+            this.ButtonGameGenie.Click += new System.EventHandler(this.ButtonGameGenie_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -373,6 +385,7 @@
         private System.Windows.Forms.Button ButtonSaveState;
         private System.Windows.Forms.Button ButtonLoadState;
         private System.Windows.Forms.CheckBox CheckFilters;
+        private System.Windows.Forms.Button ButtonGameGenie;
     }
 }
 

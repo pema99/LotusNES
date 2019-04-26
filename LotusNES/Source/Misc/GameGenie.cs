@@ -6,17 +6,18 @@ namespace LotusNES
 {
     public class GameGenie
     {
+        public bool Enabled { get; set; }
         private static readonly char[] HexTable = { 'A', 'P', 'Z', 'L', 'G', 'I', 'T', 'Y', 'E', 'O', 'X', 'U', 'K', 'S', 'V', 'N' };
         private Dictionary<ushort, GameGenieCode> codes;
 
         public GameGenie()
         {
-            codes = new Dictionary<ushort, GameGenieCode>();
+            this.codes = new Dictionary<ushort, GameGenieCode>();
         }
 
         public byte Read(ushort address, byte realData)
         {
-            if (codes.ContainsKey(address))
+            if (Enabled && codes.ContainsKey(address))
             {
                 GameGenieCode result = codes[address];
                 if (result.Code.Length == 6)
@@ -38,11 +39,12 @@ namespace LotusNES
             return realData;
         }
 
-        public void AddCode(string code)
+        public bool AddCode(string code)
         {
+            code = code.ToUpper();
             if (codes.Where(x => x.Value.Code == code).Count() == 0)
             {
-                if (code.All(x => HexTable.Contains(x)))
+                if (code.Length >= 6 && code.All(x => HexTable.Contains(x)))
                 {
                     char[] codeChars = code.ToCharArray();
                     int n0 = Array.FindIndex(HexTable, x => x == codeChars[0]);
@@ -66,7 +68,7 @@ namespace LotusNES
 
                         codes.Add((ushort)address, new GameGenieCode(code, (byte)data));
 
-                        return;
+                        return true;
                     }
                     if (code.Length == 8)
                     {
@@ -83,17 +85,35 @@ namespace LotusNES
 
                         codes.Add((ushort)address, new GameGenieCode(code, (byte)data, (byte)compare));
 
-                        return;
+                        return true;
                     }
                 }
-                throw new Exception("Invalid code");
             }
+            return false;
         }
 
-        public void RemoveCode(string code)
+        public bool RemoveCode(string code)
         {
-            var result = codes.First(x => x.Value.Code == code);
-            codes.Remove(result.Key);
+            if (code == null) return false;
+
+            code = code.ToUpper();
+            var result = codes.FirstOrDefault(x => x.Value.Code == code);
+            if (result.Value != null)
+            {
+                codes.Remove(result.Key);
+                return true;
+            }
+            return false;
+        }
+
+        public string[] GetCodes()
+        {
+            List<string> result = new List<string>();
+            foreach (var code in codes)
+            {
+                result.Add(code.Value.Code);
+            }
+            return result.ToArray();
         }
     }
 }

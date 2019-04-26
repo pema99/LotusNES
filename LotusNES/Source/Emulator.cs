@@ -22,6 +22,7 @@ namespace LotusNES
         public static Controller Controller1;
         public static Controller Controller2;
         public static NetPlayServer NetPlayServer;
+        public static GameGenie GameGenie;
 
         private static Thread EmuThread;
 
@@ -60,6 +61,7 @@ namespace LotusNES
             Controller2 = new Controller();
 
             NetPlayServer = new NetPlayServer();
+            GameGenie = new GameGenie();
 
             //Init ui and emulation thread
             Application.EnableVisualStyles();

@@ -1,6 +1,6 @@
 ﻿namespace LotusNES
 {
-    public struct GameGenieCode
+    public class GameGenieCode
     {
         public string Code { get; private set; }
         public byte Data { get; private set; }

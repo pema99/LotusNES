@@ -5,6 +5,8 @@ namespace LotusNES
 {
     public partial class MainForm : Form
     {
+        private GameGenieForm gameGenieForm = new GameGenieForm();
+
         public MainForm()
         {
             InitializeComponent();
@@ -107,6 +109,18 @@ namespace LotusNES
         {
             CheckFilters.Text = CheckFilters.Checked ? "Disable APU filter chain" : "Enable APU filter chain";
             Emulator.APU.EnableFilters = CheckFilters.Checked;
+        }
+
+        private void ButtonGameGenie_Click(object sender, EventArgs e)
+        {
+            if (gameGenieForm.Visible)
+            {
+                gameGenieForm.WindowState = FormWindowState.Normal;
+            }
+            else
+            {
+                gameGenieForm.Show();
+            }
         }
     }
 }

@@ -78,6 +78,12 @@
     <Compile Include="Source\PPU\PPU.cs" />
     <Compile Include="Source\PPU\PPUMemory.cs" />
     <Compile Include="Source\Program.cs" />
+    <Compile Include="Source\UI\GameGenieForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\UI\GameGenieForm.Designer.cs">
+      <DependentUpon>GameGenieForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Source\UI\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -101,6 +107,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
     <EmbeddedResource Include="Icon.bmp" />
+    <EmbeddedResource Include="Source\UI\GameGenieForm.resx">
+      <DependentUpon>GameGenieForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Source\UI\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
