@@ -134,32 +134,22 @@ namespace LotusNES
                 }
             }
 
-            //Skip last prerender cycle on odd frames, jump directly to start
-            if (Rendering && OddFrame && Scanline == 261 && Cycle == 339)
+            //If at last scanline
+            if (Scanline == 261)
             {
-                OddFrame = false;
-                Scanline = 0;
-                Cycle = 0;
-                //-------------Draw frame here
-                return;
-            }
-
-            //If at end of scanline, reset
-            if (Cycle == 341)
-            {
-                Cycle = 0;
-
-                //Also reset scanline count if at end of prerender
-                if (Scanline == 261)
+                //If at end of scanline (taking into account the skipped clock on odd frames when rendering is enabled)
+                if ((Rendering && OddFrame && Cycle == 339) || Cycle == 341)
                 {
                     OddFrame = !OddFrame;
                     Scanline = 0;
-                    //-------------Draw frame here
+                    Cycle = 0;
                 }
-                else
-                {
-                    Scanline++;
-                }
+            }
+            //Else increment scanlines normally and reset cycle count at end of each
+            else if (Cycle == 341)
+            {
+                Scanline++;
+                Cycle = 0;
             }
 
             //Cycle and scanline intervals
@@ -265,10 +255,10 @@ namespace LotusNES
             for (int i = oamAddr / 4; i < 64; i++)
             {
                 byte sprY = OAM[i * 4];
-                int relaltiveSprY = Scanline - sprY;
+                int relativeSprY = Scanline - sprY;
 
                 //If sprite top is on or before scanline AND the distance between sprite top and scanline is less than sprite height, draw
-                if (relaltiveSprY >= 0 && relaltiveSprY < sprHeight)
+                if (relativeSprY >= 0 && relativeSprY < sprHeight)
                 {
                     if (scanlineSprites >= 8)
                     {

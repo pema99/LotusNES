@@ -24,8 +24,8 @@ namespace LotusNES
         private delegate void Instruction(ushort address, int addressMode);
         private readonly Instruction[] Instructions;
 
-        private delegate ushort addressMode();
-        private readonly addressMode[] AddressModes;
+        private delegate ushort AddressMode();
+        private readonly AddressMode[] AddressModes;
 
         private readonly int[] InstructionAddressMode = new int[256]
         {
@@ -67,24 +67,24 @@ namespace LotusNES
             2, 5, 2, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7,
         };
 
-        private readonly int[] InstructionPageCrossCycles = new int[256]
+        private readonly bool[] InstructionPageCrossCycles = new bool[256]
         {
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            true,  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            true,  true,  false, true,  false, false, false, false, false, true,  false, true,  true,  true,  true,  true,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false
         };
         #endregion
 
@@ -134,7 +134,7 @@ namespace LotusNES
                 OpBEQ, OpSBC, OpERR, OpERR, OpERR, OpSBC, OpINC, OpERR, OpSED, OpSBC, OpERR, OpERR, OpERR, OpSBC, OpINC, OpERR  //F
             };
 
-            this.AddressModes = new addressMode[13]
+            this.AddressModes = new AddressMode[13]
             {
                 AddrAbsolute,
                 AddrAbsoluteX,
@@ -863,7 +863,7 @@ namespace LotusNES
         {
             ushort result = (ushort)(Memory.Read16(pc) + x);
             pc += 2;
-            if (PageCrossed((ushort)(result - x), x) && InstructionPageCrossCycles[opcode] != 0)
+            if (PageCrossed((ushort)(result - x), x) && InstructionPageCrossCycles[opcode])
             {
                 Cycles++;
             }
@@ -874,7 +874,7 @@ namespace LotusNES
         {
             ushort result = (ushort)(Memory.Read16(pc) + y);
             pc += 2;
-            if (PageCrossed((ushort)(result - y), y) && InstructionPageCrossCycles[opcode] != 0)
+            if (PageCrossed((ushort)(result - y), y) && InstructionPageCrossCycles[opcode])
             {
                 Cycles++;
             }
@@ -908,7 +908,7 @@ namespace LotusNES
 
             ushort Result = (ushort)(Memory.Read(indirectAddressLS) + (Memory.Read(indirectAddressMS) << 8) + y);
 
-            if (PageCrossed((ushort)(Result - y), Result) && InstructionPageCrossCycles[opcode] != 0)
+            if (PageCrossed((ushort)(Result - y), Result) && InstructionPageCrossCycles[opcode])
             {
                 Cycles++;
             }

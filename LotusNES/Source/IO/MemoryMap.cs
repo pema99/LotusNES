@@ -12,10 +12,10 @@ namespace LotusNES
         {
             if (wrapPage)
             {
-                if ((address & 255) == 255)
+                if ((address & 0b11111111) == 0b11111111)
                 {
                     byte dataLS = Read(address);
-                    byte dataMS = Read((ushort)(address & (~255)));
+                    byte dataMS = Read((ushort)(address & (~0b11111111)));
                     return (ushort)((dataMS << 8) + dataLS);
                 }
                 else

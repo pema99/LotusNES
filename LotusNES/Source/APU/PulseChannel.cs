@@ -5,7 +5,8 @@ namespace LotusNES
     [Serializable]
     public class PulseChannel
     {
-        private static readonly byte[] PulseDutyCycleLookup =
+        //https://wiki.nesdev.com/w/index.php/APU_Pulse
+        private static readonly byte[] PulseDutyLookup =
         {
             0, 1, 0, 0, 0, 0, 0, 0,
             0, 1, 1, 0, 0, 0, 0, 0,
@@ -19,7 +20,7 @@ namespace LotusNES
         public LengthCounter LengthCounter { get; private set; }
         public Sweep Sweep { get; private set; }
 
-        public byte DutyCycle { get; set; }
+        public byte DutySequence { get; set; }
         public byte DutyValue { get; set; }
       
         public ushort TimerPeriod { get; set; }
@@ -38,7 +39,7 @@ namespace LotusNES
 
         public byte Sample()
         {
-            byte high = PulseDutyCycleLookup[DutyCycle * 8 + DutyValue];
+            byte high = PulseDutyLookup[DutySequence * 8 + DutyValue];
             if (!Enabled || high == 0 || LengthCounter.Value <= 0 || timerValue < 8 || TimerPeriod >= 2048)
             {
                 return 0;
@@ -65,7 +66,7 @@ namespace LotusNES
             else
             {
                 timerValue = TimerPeriod;
-                DutyValue += 1;
+                DutyValue++;
                 DutyValue %= 8;
             }
         }

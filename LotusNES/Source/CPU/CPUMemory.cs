@@ -90,7 +90,6 @@ namespace LotusNES
             //CPU test mode, do nothing
             else if (address < 0x4020)
             {
-
             }
 
             //Everything after 0x401F is cartridge space

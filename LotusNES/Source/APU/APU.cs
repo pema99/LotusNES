@@ -217,7 +217,7 @@ namespace LotusNES
             {
                 case 0x4000:
                 case 0x4004:
-                    pulse[pulseIndex].DutyCycle = (byte)((data & 0b11000000) >> 6);
+                    pulse[pulseIndex].DutySequence = (byte)((data & 0b11000000) >> 6);
                     pulse[pulseIndex].LengthCounter.Enabled = (data & 0b00100000) == 0;
                     pulse[pulseIndex].Envelope.Loop = (data & 0b00100000) != 0;
                     pulse[pulseIndex].Envelope.Enabled = (data & 0b00010000) == 0;
