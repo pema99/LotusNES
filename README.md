@@ -37,6 +37,7 @@ Because emulation is cool
 
 ## How do I use it?
 Build with Visual Studio 2017, run the LotusNES project. If you want to use NetPlay one player becomes the host and the other runs the LotusNES.NetPlayClient project.
+If you are on OSX or Linux you will need to run the emulator through Mono, but it should be functional.
 
 ## (Insert other emulator) is faster and/or better
 Yes.
