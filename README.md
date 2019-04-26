@@ -6,7 +6,8 @@ This is a fairly feature complete NES emulator written in C# mainly as a learnin
 - NROM
 - MM1
 - MMC3
-- MMC6
+- MMC6 (Startropics 1 & 2)
+- Mapper 11 (Color Dreams / Wisdom Tree)
 - UxROM
 - GxROM
 - CNROM
@@ -23,6 +24,7 @@ This is a fairly feature complete NES emulator written in C# mainly as a learnin
 - Pausing
 - Configurable resolution and volume
 - Gamepad support
+- Can run ROMS with incorrect iNES headers by using SHA1 checksums
 
 ## Controls
 A | Select
