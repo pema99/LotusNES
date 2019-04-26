@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2000
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LotusNES", "LotusNES\LotusNES.csproj", "{89A3FAD3-46BD-4233-8062-03C1F559D71B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LotusNES.NetPlayClient", "LotusNES.NetPlayClient\LotusNES.NetPlayClient.csproj", "{FF46C2CE-6D61-4586-B958-4F86B539FA7B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{89A3FAD3-46BD-4233-8062-03C1F559D71B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89A3FAD3-46BD-4233-8062-03C1F559D71B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89A3FAD3-46BD-4233-8062-03C1F559D71B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89A3FAD3-46BD-4233-8062-03C1F559D71B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF46C2CE-6D61-4586-B958-4F86B539FA7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF46C2CE-6D61-4586-B958-4F86B539FA7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF46C2CE-6D61-4586-B958-4F86B539FA7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF46C2CE-6D61-4586-B958-4F86B539FA7B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6F828BD3-4B9A-45E2-A5D2-68F4EC5B66EE}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+EndGlobal
