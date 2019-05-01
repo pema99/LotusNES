@@ -70,12 +70,12 @@
     <Compile Include="Source\Mappers\MMC3.cs" />
     <Compile Include="Source\Mappers\NROM.cs" />
     <Compile Include="Source\Mappers\UxROM.cs" />
-    <Compile Include="Source\PPU\VramMirroringMode.cs" />
+    <Compile Include="Source\Misc\VramMirroringMode.cs" />
     <Compile Include="Source\Misc\FastBitmap.cs" />
     <Compile Include="Source\Misc\GameGenie.cs" />
     <Compile Include="Source\Misc\GameGenieCode.cs" />
     <Compile Include="Source\NetPlay\NetPlayServer.cs" />
-    <Compile Include="Source\Misc\PaletteMap.cs" />
+    <Compile Include="Source\NetPlay\PaletteMap.cs" />
     <Compile Include="Source\PPU\PPU.cs" />
     <Compile Include="Source\PPU\PPUMemory.cs" />
     <Compile Include="Source\Program.cs" />
