@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5AC05ED7-16A2-4BFA-89E2-DB2C0C8698E1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LotusNES.Core</RootNamespace>
+    <AssemblyName>LotusNES.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="APU\APU.cs" />
+    <Compile Include="APU\DMCChannel.cs" />
+    <Compile Include="APU\Envelope.cs" />
+    <Compile Include="APU\Filter.cs" />
+    <Compile Include="APU\HighPassFilter.cs" />
+    <Compile Include="APU\LengthCounter.cs" />
+    <Compile Include="APU\LinearCounter.cs" />
+    <Compile Include="APU\LowPassFilter.cs" />
+    <Compile Include="APU\NoiseChannel.cs" />
+    <Compile Include="APU\PulseChannel.cs" />
+    <Compile Include="APU\Sweep.cs" />
+    <Compile Include="APU\TriangleChannel.cs" />
+    <Compile Include="CPU\CPU.cs" />
+    <Compile Include="CPU\CPUMemory.cs" />
+    <Compile Include="Emulator.cs" />
+    <Compile Include="IO\Controller.cs" />
+    <Compile Include="IO\ControllerButton.cs" />
+    <Compile Include="IO\GamePak.cs" />
+    <Compile Include="IO\MemoryMap.cs" />
+    <Compile Include="Mappers\AxROM.cs" />
+    <Compile Include="Mappers\CNROM.cs" />
+    <Compile Include="Mappers\GxROM.cs" />
+    <Compile Include="Mappers\Mapper.cs" />
+    <Compile Include="Mappers\MMC1.cs" />
+    <Compile Include="Mappers\MMC3.cs" />
+    <Compile Include="Mappers\NROM.cs" />
+    <Compile Include="Mappers\UxROM.cs" />
+    <Compile Include="Misc\GameGenie.cs" />
+    <Compile Include="Misc\GameGenieCode.cs" />
+    <Compile Include="Misc\VramMirroringMode.cs" />
+    <Compile Include="NetPlay\NetPlayServer.cs" />
+    <Compile Include="PPU\PPU.cs" />
+    <Compile Include="PPU\PPUMemory.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
