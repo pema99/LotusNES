@@ -40,6 +40,8 @@ namespace LotusNES.Frontend
 
         protected override void Initialize()
         {
+            Window.Title = "LotusNES";
+
             sb = new SpriteBatch(GraphicsDevice);
             blank = new Texture2D(GraphicsDevice, 1, 1);
             blank.SetData(new Color[] { Color.White });

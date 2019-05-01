@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LotusNES.Frontend", "LotusNES.Frontend\LotusNES.Frontend.csproj", "{89A3FAD3-46BD-4233-8062-03C1F559D71B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LotusNES.NetPlayClient", "LotusNES.NetPlayClient\LotusNES.NetPlayClient.csproj", "{FF46C2CE-6D61-4586-B958-4F86B539FA7B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LotusNES.Core", "LotusNES.Core\LotusNES.Core.csproj", "{5AC05ED7-16A2-4BFA-89E2-DB2C0C8698E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LotusNES.Frontend", "LotusNES.Frontend\LotusNES.Frontend.csproj", "{7FEB4942-F014-4BC8-B475-E9FDD1658E86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{89A3FAD3-46BD-4233-8062-03C1F559D71B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{89A3FAD3-46BD-4233-8062-03C1F559D71B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{89A3FAD3-46BD-4233-8062-03C1F559D71B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{89A3FAD3-46BD-4233-8062-03C1F559D71B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FF46C2CE-6D61-4586-B958-4F86B539FA7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FF46C2CE-6D61-4586-B958-4F86B539FA7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF46C2CE-6D61-4586-B958-4F86B539FA7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -27,6 +23,10 @@ Global
 		{5AC05ED7-16A2-4BFA-89E2-DB2C0C8698E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AC05ED7-16A2-4BFA-89E2-DB2C0C8698E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AC05ED7-16A2-4BFA-89E2-DB2C0C8698E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FEB4942-F014-4BC8-B475-E9FDD1658E86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FEB4942-F014-4BC8-B475-E9FDD1658E86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FEB4942-F014-4BC8-B475-E9FDD1658E86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FEB4942-F014-4BC8-B475-E9FDD1658E86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

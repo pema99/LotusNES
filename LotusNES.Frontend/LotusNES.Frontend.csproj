@@ -6,11 +6,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{89A3FAD3-46BD-4233-8062-03C1F559D71B}</ProjectGuid>
+    <ProjectGuid>{7FEB4942-F014-4BC8-B475-E9FDD1658E86}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LotusNES</RootNamespace>
-    <AssemblyName>LotusNES</AssemblyName>
+    <RootNamespace>LotusNES.Frontend</RootNamespace>
+    <AssemblyName>LotusNES.Frontend</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -46,6 +46,12 @@
     <Compile Include="Source\Misc\FastBitmap.cs" />
     <Compile Include="Source\Misc\PaletteMap.cs" />
     <Compile Include="Source\Program.cs" />
+    <Compile Include="Source\UI\Debug\GameGenieForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\UI\Debug\GameGenieForm.Designer.cs">
+      <DependentUpon>GameGenieForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Source\UI\Debug\NameTableForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -57,12 +63,6 @@
     </Compile>
     <Compile Include="Source\UI\Debug\PPUViewForm.Designer.cs">
       <DependentUpon>PPUViewForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Source\UI\Debug\GameGenieForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Source\UI\Debug\GameGenieForm.Designer.cs">
-      <DependentUpon>GameGenieForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Source\UI\MainForm.cs">
       <SubType>Form</SubType>
@@ -77,25 +77,21 @@
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
-    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
     <EmbeddedResource Include="Icon.bmp" />
+    <EmbeddedResource Include="Source\UI\Debug\GameGenieForm.resx">
+      <DependentUpon>GameGenieForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Source\UI\Debug\NameTableForm.resx">
       <DependentUpon>NameTableForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Source\UI\Debug\PPUViewForm.resx">
       <DependentUpon>PPUViewForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Source\UI\Debug\GameGenieForm.resx">
-      <DependentUpon>GameGenieForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Source\UI\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -148,12 +144,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="app.manifest" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="CartDB.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LotusNES.Core\LotusNES.Core.csproj">
