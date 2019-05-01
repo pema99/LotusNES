@@ -88,7 +88,7 @@ namespace LotusNES
                 //Draw frame
                 for (int i = 0; i < screenWidth * screenHeight; i++)
                 {
-                    frameBuffer[i] = PaletteMap.Map(Emulator.PPU.FrameBuffer[i]);
+                    frameBuffer[i] = PaletteMap.MapXNA(Emulator.PPU.FrameBuffer[i]);
                 }
 
                 //Get input from peer
@@ -132,7 +132,7 @@ namespace LotusNES
         private void HandleAudio()
         {
             //If enough has been gathered to submit, do so
-            if (Emulator.APU.AudioBufferReady())
+            if (Emulator.APU.GetAudioBufferReady())
             {
                 float[] buffer = Emulator.APU.GetAudioBuffer();
 

@@ -162,7 +162,7 @@ namespace LotusNES
             }
         }
 
-        public bool AudioBufferReady()
+        public bool GetAudioBufferReady()
         {
             return audioBufferIndex >= BufferSize;
         }

@@ -14,25 +14,26 @@ namespace LotusNES
         public static MainViewport Viewport;
 
         //Emulation components
-        public static CPU CPU;
-        public static PPU PPU;
-        public static APU APU;
-        public static GamePak GamePak;
-        public static Mapper Mapper;
-        public static Controller Controller1;
-        public static Controller Controller2;
-        public static NetPlayServer NetPlayServer;
-        public static GameGenie GameGenie;
+        public static CPU CPU { get; private set; }
+        public static PPU PPU { get; private set; }
+        public static APU APU { get; private set; }
+        public static GamePak GamePak { get; private set; }
+        public static Mapper Mapper { get; private set; }
+        public static Controller Controller1 { get; private set; }
+        public static Controller Controller2 { get; private set; }
+        public static NetPlayServer NetPlayServer { get; private set; }
+        public static GameGenie GameGenie { get; private set; }
 
         private static Thread EmuThread;
 
         //Emulation options
-        public static bool Turbo;
-        public static double Speed;
-        public static bool Pause;
+        public static bool Turbo { get; set; }
+        public static double Speed { get; set; }
+        public static bool Pause { get; set; }
+        public static bool DisableAPU { get; set; }
 
         //State
-        public static bool Running;
+        public static bool Running { get; private set; }
         private static bool queueLoad;
         private static string romPath;
         private static bool queueSaveState;
@@ -45,6 +46,7 @@ namespace LotusNES
             Turbo = false;
             Speed = 1;
             Pause = false;
+            DisableAPU = false;
 
             Running = false;
             queueLoad = false;
@@ -127,7 +129,7 @@ namespace LotusNES
                 {
                     int ElapsedCycles = CPU.Step();
 
-                    for (int i = 0; i < ElapsedCycles; i++)
+                    for (int i = 0; i < ElapsedCycles && !DisableAPU; i++)
                     {
                         APU.Step();
                     }

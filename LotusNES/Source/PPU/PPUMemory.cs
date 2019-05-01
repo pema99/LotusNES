@@ -31,7 +31,12 @@ namespace LotusNES
             //32 bytes of palette ram, mirror until 0x4000
             else
             {
-                return paletteRAM[HandlePaletteRAMMirroring(address)];
+                int paletteIndex = HandlePaletteRAMMirroring(address);
+                if (paletteIndex % 4 == 0) //Redirect to global background only on read
+                {
+                    paletteIndex = 0;
+                }
+                return paletteRAM[paletteIndex];
             }
         }
 

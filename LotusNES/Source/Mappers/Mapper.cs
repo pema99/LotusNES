@@ -8,7 +8,7 @@ namespace LotusNES
     [Serializable]
     public abstract class Mapper
     {
-        public VRAMMirroringMode VRAMMirroring { get; protected set; }
+        public VRAMMirroringMode VRAMMirroring { get; set; }
 
         protected Mapper(VRAMMirroringMode vramMirroring)
         {

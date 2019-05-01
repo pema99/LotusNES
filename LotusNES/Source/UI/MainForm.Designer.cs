@@ -20,7 +20,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.LabelStatus = new System.Windows.Forms.Label();
             this.CheckPause = new System.Windows.Forms.CheckBox();
-            this.UpdateTimer = new System.Windows.Forms.Timer(this.components);
+            this.TimerUpdate = new System.Windows.Forms.Timer(this.components);
             this.CheckTurbo = new System.Windows.Forms.CheckBox();
             this.ButtonNetPlay = new System.Windows.Forms.Button();
             this.NumberPort = new System.Windows.Forms.NumericUpDown();
@@ -35,13 +35,16 @@
             this.LabelSpeed = new System.Windows.Forms.Label();
             this.SliderSpeed = new System.Windows.Forms.TrackBar();
             this.TabSettings = new System.Windows.Forms.TabPage();
+            this.ButtonGameGenie = new System.Windows.Forms.Button();
             this.LabelVolume = new System.Windows.Forms.Label();
             this.SliderVolume = new System.Windows.Forms.TrackBar();
             this.LabelResolution = new System.Windows.Forms.Label();
             this.ComboResolution = new System.Windows.Forms.ComboBox();
             this.TabNetPlay = new System.Windows.Forms.TabPage();
             this.TabDebug = new System.Windows.Forms.TabPage();
-            this.ButtonGameGenie = new System.Windows.Forms.Button();
+            this.ButtonNametables = new System.Windows.Forms.Button();
+            this.ButtonPPUView = new System.Windows.Forms.Button();
+            this.CheckMute = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.NumberPort)).BeginInit();
             this.TabsMenu.SuspendLayout();
             this.TabFile.SuspendLayout();
@@ -77,10 +80,10 @@
             this.CheckPause.UseVisualStyleBackColor = true;
             this.CheckPause.CheckedChanged += new System.EventHandler(this.CheckPause_CheckedChanged);
             // 
-            // UpdateTimer
+            // TimerUpdate
             // 
-            this.UpdateTimer.Enabled = true;
-            this.UpdateTimer.Tick += new System.EventHandler(this.UpdateTimer_Tick);
+            this.TimerUpdate.Enabled = true;
+            this.TimerUpdate.Tick += new System.EventHandler(this.UpdateTimer_Tick);
             // 
             // CheckTurbo
             // 
@@ -237,6 +240,7 @@
             // TabSettings
             // 
             this.TabSettings.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.TabSettings.Controls.Add(this.CheckMute);
             this.TabSettings.Controls.Add(this.ButtonGameGenie);
             this.TabSettings.Controls.Add(this.LabelVolume);
             this.TabSettings.Controls.Add(this.SliderVolume);
@@ -247,6 +251,16 @@
             this.TabSettings.Size = new System.Drawing.Size(254, 190);
             this.TabSettings.TabIndex = 4;
             this.TabSettings.Text = "Settings";
+            // 
+            // ButtonGameGenie
+            // 
+            this.ButtonGameGenie.Location = new System.Drawing.Point(6, 30);
+            this.ButtonGameGenie.Name = "ButtonGameGenie";
+            this.ButtonGameGenie.Size = new System.Drawing.Size(110, 23);
+            this.ButtonGameGenie.TabIndex = 16;
+            this.ButtonGameGenie.Text = "GameGenie menu";
+            this.ButtonGameGenie.UseVisualStyleBackColor = true;
+            this.ButtonGameGenie.Click += new System.EventHandler(this.ButtonGameGenie_Click);
             // 
             // LabelVolume
             // 
@@ -313,6 +327,8 @@
             // TabDebug
             // 
             this.TabDebug.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.TabDebug.Controls.Add(this.ButtonNametables);
+            this.TabDebug.Controls.Add(this.ButtonPPUView);
             this.TabDebug.Controls.Add(this.LabelStatus);
             this.TabDebug.Location = new System.Drawing.Point(4, 22);
             this.TabDebug.Name = "TabDebug";
@@ -321,15 +337,37 @@
             this.TabDebug.TabIndex = 1;
             this.TabDebug.Text = "Debug";
             // 
-            // ButtonGameGenie
+            // ButtonNametables
             // 
-            this.ButtonGameGenie.Location = new System.Drawing.Point(6, 30);
-            this.ButtonGameGenie.Name = "ButtonGameGenie";
-            this.ButtonGameGenie.Size = new System.Drawing.Size(110, 23);
-            this.ButtonGameGenie.TabIndex = 16;
-            this.ButtonGameGenie.Text = "GameGenie menu";
-            this.ButtonGameGenie.UseVisualStyleBackColor = true;
-            this.ButtonGameGenie.Click += new System.EventHandler(this.ButtonGameGenie_Click);
+            this.ButtonNametables.Location = new System.Drawing.Point(173, 35);
+            this.ButtonNametables.Name = "ButtonNametables";
+            this.ButtonNametables.Size = new System.Drawing.Size(75, 23);
+            this.ButtonNametables.TabIndex = 2;
+            this.ButtonNametables.Text = "Nametables";
+            this.ButtonNametables.UseVisualStyleBackColor = true;
+            this.ButtonNametables.Click += new System.EventHandler(this.ButtonNametables_Click);
+            // 
+            // ButtonPPUView
+            // 
+            this.ButtonPPUView.Location = new System.Drawing.Point(173, 6);
+            this.ButtonPPUView.Name = "ButtonPPUView";
+            this.ButtonPPUView.Size = new System.Drawing.Size(75, 23);
+            this.ButtonPPUView.TabIndex = 1;
+            this.ButtonPPUView.Text = "PPU View";
+            this.ButtonPPUView.UseVisualStyleBackColor = true;
+            this.ButtonPPUView.Click += new System.EventHandler(this.ButtonPPUView_Click);
+            // 
+            // CheckMute
+            // 
+            this.CheckMute.Appearance = System.Windows.Forms.Appearance.Button;
+            this.CheckMute.AutoSize = true;
+            this.CheckMute.Location = new System.Drawing.Point(6, 100);
+            this.CheckMute.Name = "CheckMute";
+            this.CheckMute.Size = new System.Drawing.Size(207, 23);
+            this.CheckMute.TabIndex = 17;
+            this.CheckMute.Text = "Disable APU (may improve performance)";
+            this.CheckMute.UseVisualStyleBackColor = true;
+            this.CheckMute.CheckedChanged += new System.EventHandler(this.CheckMute_CheckedChanged);
             // 
             // MainForm
             // 
@@ -339,6 +377,7 @@
             this.Controls.Add(this.TabsMenu);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "LotusNES";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -363,7 +402,7 @@
         #endregion
 
         public System.Windows.Forms.Label LabelStatus;
-        private System.Windows.Forms.Timer UpdateTimer;
+        private System.Windows.Forms.Timer TimerUpdate;
         public System.Windows.Forms.CheckBox CheckPause;
         public System.Windows.Forms.CheckBox CheckTurbo;
         private System.Windows.Forms.Button ButtonNetPlay;
@@ -386,6 +425,9 @@
         private System.Windows.Forms.Button ButtonLoadState;
         private System.Windows.Forms.CheckBox CheckFilters;
         private System.Windows.Forms.Button ButtonGameGenie;
+        private System.Windows.Forms.Button ButtonPPUView;
+        private System.Windows.Forms.Button ButtonNametables;
+        private System.Windows.Forms.CheckBox CheckMute;
     }
 }
 

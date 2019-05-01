@@ -6,6 +6,8 @@ namespace LotusNES
     public partial class MainForm : Form
     {
         private GameGenieForm gameGenieForm = new GameGenieForm();
+        private PPUViewForm ppuViewForm = new PPUViewForm();
+        private NameTableForm nameTableForm = new NameTableForm();
 
         public MainForm()
         {
@@ -57,7 +59,8 @@ namespace LotusNES
             if (OFD.ShowDialog() == DialogResult.OK)
             {
                 Emulator.LoadROM(OFD.FileName);
-            }
+                nameTableForm.UpdateMirroring = true;
+            }      
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -79,8 +82,9 @@ namespace LotusNES
 
         private void SliderVolume_Scroll(object sender, EventArgs e)
         {
-            LabelVolume.Text = string.Format("Sound volume {0}%", SliderVolume.Value);
+            Emulator.DisableAPU = SliderVolume.Value == 0;
             Emulator.Viewport.SetVolume(SliderVolume.Value / 100f);
+            LabelVolume.Text = string.Format("Sound volume {0}%", SliderVolume.Value);
         }
 
         private void ButtonSaveState_Click(object sender, EventArgs e)
@@ -120,6 +124,46 @@ namespace LotusNES
             else
             {
                 gameGenieForm.Show();
+            }
+        }
+
+        private void ButtonPPUView_Click(object sender, EventArgs e)
+        {
+            if (ppuViewForm.Visible)
+            {
+                ppuViewForm.WindowState = FormWindowState.Normal;
+            }
+            else
+            {
+                ppuViewForm.Show();
+            }
+        }
+
+        private void ButtonNametables_Click(object sender, EventArgs e)
+        {
+            if (nameTableForm.Visible)
+            {
+                nameTableForm.WindowState = FormWindowState.Normal;
+            }
+            else
+            {
+                nameTableForm.Show();
+            }
+        }
+
+        private void CheckMute_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CheckMute.Checked)
+            {
+                CheckMute.Text = "Enable APU (may lower performance)";
+                Emulator.DisableAPU = true;
+                SliderVolume.Enabled = false;
+            }
+            else
+            {
+                CheckMute.Text = "Disable APU (may improve performance)";
+                Emulator.DisableAPU = SliderVolume.Value == 0;
+                SliderVolume.Enabled = true;
             }
         }
     }

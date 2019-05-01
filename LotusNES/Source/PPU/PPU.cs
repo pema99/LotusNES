@@ -541,11 +541,14 @@ namespace LotusNES
             lastRegisterData = data; //Writing always fills the internal bus
         }
 
-        //0x2002, 0x2004 and 0x2007 are readable
+        //0x2002, 0x2004 and 0x2007 are readable, 0x2000 is debug
         public byte GetRegister(ushort address)
         {
             switch (address)
             {
+                case 0x2000:
+                    return GetPPUCTRL();
+
                 case 0x2002:
                     return GetPPUSTATUS();
 
@@ -670,22 +673,22 @@ namespace LotusNES
         private void SetOAMDMA(byte data)
         {
             //MSB of cpu address, page
-            ushort CPUBaseAddress = (ushort)(data << 8);
+            ushort cpuBaseAddress = (ushort)(data << 8);
 
             //Copy 256 bytes from CPU to OAM
-            int CurOAMADDR = oamAddr;
-            ushort CurCPUAddress = CPUBaseAddress;
+            int curOamAddr = oamAddr;
+            ushort curCpuAddress = cpuBaseAddress;
             for (int i = 0; i < 256; i++)
             {
-                if (CurOAMADDR >= 256)
+                if (curOamAddr >= 256)
                 {
-                    CurOAMADDR = 0;
+                    curOamAddr = 0;
                 }
 
-                OAM[CurOAMADDR] = Emulator.CPU.Memory.Read(CurCPUAddress);
+                OAM[curOamAddr] = Emulator.CPU.Memory.Read(curCpuAddress);
 
-                CurOAMADDR++;
-                CurCPUAddress++;
+                curOamAddr++;
+                curCpuAddress++;
             }
             
             //According to nesdev OAMDMA takes 513 or 514 cycles, 514 on odd cpu cycle
@@ -699,10 +702,22 @@ namespace LotusNES
             }
         }
 
+        //For debug
+        private byte GetPPUCTRL()
+        {
+            return (byte)((flagNMIEnable             ? 0b10000000 : 0) +
+                          (flagPPUMasterSlave        ? 0b01000000 : 0) +
+                          (flagSpriteHeight          ? 0b00100000 : 0) +
+                          (flagBackgroundTileSelect  ? 0b00010000 : 0) +
+                          (flagSpriteTileSelect      ? 0b00001000 : 0) +
+                          (flagIncrementMode         ? 0b00000100 : 0) +
+                          (flagNameTableSelect       & 0b00000011));
+        }
+
         private byte GetPPUSTATUS()
         {
             //flagVBlank = true; - For testing
-            byte Result = (byte)((flagVBlank          ? 0b10000000 : 0) +
+            byte result = (byte)((flagVBlank          ? 0b10000000 : 0) +
                                  (flagSprite0Hit      ? 0b01000000 : 0) +
                                  (flagSpriteOverflow  ? 0b00100000 : 0) +
                                  (lastRegisterData    & 0b00011111));
@@ -710,7 +725,7 @@ namespace LotusNES
             flagVBlank = false; //Cleared on read
             writeLatch = false; //Ditto
 
-            return Result;
+            return result;
         }
 
         private byte GetOAMDATA()
@@ -720,14 +735,14 @@ namespace LotusNES
 
         private byte GetPPUDATA()
         {
-            byte Result = Memory.Read(ppuAddr);
+            byte result = Memory.Read(ppuAddr);
 
             //https://wiki.nesdev.com/w/index.php/PPU_registers#The_PPUDATA_read_buffer_.28post-fetch.29
             if (ppuAddr < 0x3F00)
             {
                 byte Temp = ppuDataBuffer;
-                ppuDataBuffer = Result;
-                Result = Temp;
+                ppuDataBuffer = result;
+                result = Temp;
             }
             else
             {
@@ -736,7 +751,7 @@ namespace LotusNES
 
             ppuAddr += ppuAddrIncrement;
 
-            return Result;
+            return result;
         }
         #endregion
     }
