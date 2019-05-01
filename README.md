@@ -22,6 +22,7 @@ Here, have a screenshot:
 - A GUI for interacting with the emulator
 - Pretty solid CPU and PPU emulation
 - Pretty non-solid APU emulation
+- Some neat debugging tools
 - NetPlay, play with friends
 - Savestates
 - Configurable emulation speed with a turbo mode
