@@ -46,22 +46,22 @@
     <Compile Include="Source\Misc\FastBitmap.cs" />
     <Compile Include="Source\Misc\PaletteMap.cs" />
     <Compile Include="Source\Program.cs" />
-    <Compile Include="Source\UI\Debug\GameGenieForm.cs">
+    <Compile Include="Source\UI\Debug tools\GameGenieForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Source\UI\Debug\GameGenieForm.Designer.cs">
+    <Compile Include="Source\UI\Debug tools\GameGenieForm.Designer.cs">
       <DependentUpon>GameGenieForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Source\UI\Debug\NameTableForm.cs">
+    <Compile Include="Source\UI\Debug tools\NameTableForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Source\UI\Debug\NameTableForm.Designer.cs">
+    <Compile Include="Source\UI\Debug tools\NameTableForm.Designer.cs">
       <DependentUpon>NameTableForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Source\UI\Debug\PPUViewForm.cs">
+    <Compile Include="Source\UI\Debug tools\PPUViewForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Source\UI\Debug\PPUViewForm.Designer.cs">
+    <Compile Include="Source\UI\Debug tools\PPUViewForm.Designer.cs">
       <DependentUpon>PPUViewForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Source\UI\DoubleBufferedForm.cs">
@@ -100,13 +100,13 @@
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
     <EmbeddedResource Include="Icon.bmp" />
-    <EmbeddedResource Include="Source\UI\Debug\GameGenieForm.resx">
+    <EmbeddedResource Include="Source\UI\Debug tools\GameGenieForm.resx">
       <DependentUpon>GameGenieForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Source\UI\Debug\NameTableForm.resx">
+    <EmbeddedResource Include="Source\UI\Debug tools\NameTableForm.resx">
       <DependentUpon>NameTableForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Source\UI\Debug\PPUViewForm.resx">
+    <EmbeddedResource Include="Source\UI\Debug tools\PPUViewForm.resx">
       <DependentUpon>PPUViewForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Source\UI\Input\InputForm.resx">
@@ -174,7 +174,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
