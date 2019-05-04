@@ -1,10 +1,17 @@
-# LotusNES
+# LotusNES [![Build status](https://ci.appveyor.com/api/projects/status/lo08xl6yt79ptva7?svg=true)](https://ci.appveyor.com/project/pema99/lotusnes/build/artifacts)
 ## What is this?
 This is a fairly feature complete NES emulator written in C# mainly as a learning project. I would estimate that it runs about 80-90% of the NES library. 
 
 Here, have a screenshot:
 
 ![Screenshot](Screenshot.png)
+
+## How do I use it?
+
+You can either get the latest build off AppVeyor with [this link](https://ci.appveyor.com/project/pema99/lotusnes/build/artifacts) or build the project yourself.
+
+Build with Visual Studio 2017, run the LotusNES project. If you want to use NetPlay one player becomes the host and the other runs the LotusNES.NetPlayClient project.
+If you are on OSX or Linux you will need to run the emulator through Mono, but it should be functional.
 
 ## Implemented mappers
 - NROM
@@ -41,10 +48,6 @@ Gamepads are also supported.
 
 ## Why?
 Because emulation is cool
-
-## How do I use it?
-Build with Visual Studio 2017, run the LotusNES project. If you want to use NetPlay one player becomes the host and the other runs the LotusNES.NetPlayClient project.
-If you are on OSX or Linux you will need to run the emulator through Mono, but it should be functional.
 
 ## (Insert other emulator) is faster and/or better
 Yes.
