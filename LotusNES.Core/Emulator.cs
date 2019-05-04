@@ -95,7 +95,7 @@ namespace LotusNES.Core
                     HandleIO();
                     DoFrame();
                 }
-                catch (Exception e) when (!Debugger.IsAttached)
+                catch (Exception e)// when (!Debugger.IsAttached)
                 {
                     //Stop emulation, show error
                     Running = false;
@@ -179,6 +179,8 @@ namespace LotusNES.Core
 
             else if (queueLoad)
             {
+                queueLoad = false;
+
                 GamePak = new GamePak(romPath);
                 Mapper = Mapper.Create(GamePak);
                 CPU.Reset();
@@ -186,7 +188,6 @@ namespace LotusNES.Core
                 APU.Reset();
 
                 Running = true;
-                queueLoad = false;
             }
         }
     }
