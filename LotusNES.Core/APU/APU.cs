@@ -6,7 +6,7 @@ namespace LotusNES.Core
     public class APU
     {
         //Constants
-        public const int SampleRate = 60000; //Sample rate for apu slightly higher than audio api sample rate to prevent popping
+        public const int SampleRate = 45000; //Sample rate for apu slightly higher than audio api sample rate to prevent popping
         public const int BufferSize = 1024;
         public const int APUClockRate = 240;
         private const int CPUClockRate = 1789773;

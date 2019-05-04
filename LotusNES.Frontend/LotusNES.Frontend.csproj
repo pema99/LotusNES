@@ -64,6 +64,21 @@
     <Compile Include="Source\UI\Debug\PPUViewForm.Designer.cs">
       <DependentUpon>PPUViewForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Source\UI\DoubleBufferedForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\UI\Input\InputForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\UI\Input\InputForm.Designer.cs">
+      <DependentUpon>InputForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\UI\Input\InputKeyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\UI\Input\InputKeyForm.Designer.cs">
+      <DependentUpon>InputKeyForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Source\UI\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,6 +92,7 @@
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -92,6 +108,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Source\UI\Debug\PPUViewForm.resx">
       <DependentUpon>PPUViewForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Source\UI\Input\InputForm.resx">
+      <DependentUpon>InputForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Source\UI\Input\InputKeyForm.resx">
+      <DependentUpon>InputKeyForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Source\UI\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

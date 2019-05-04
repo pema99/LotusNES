@@ -14,8 +14,7 @@ namespace LotusNES.Core
         public static APU APU { get; private set; }
         public static GamePak GamePak { get; private set; }
         public static Mapper Mapper { get; private set; }
-        public static Controller Controller1 { get; private set; }
-        public static Controller Controller2 { get; private set; }
+        public static Controller[] Controllers { get; private set; }
         public static NetPlayServer NetPlayServer { get; private set; }
         public static GameGenie GameGenie { get; private set; }
 
@@ -57,8 +56,7 @@ namespace LotusNES.Core
             CPU = new CPU();
             PPU = new PPU();
             APU = new APU();
-            Controller1 = new Controller();
-            Controller2 = new Controller();
+            Controllers = new Controller[] { new Controller(), new Controller() };
 
             NetPlayServer = new NetPlayServer();
             GameGenie = new GameGenie();

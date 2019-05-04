@@ -18,6 +18,7 @@ namespace LotusNES.Frontend
         private int screenWidth = 256;
         private int screenHeight = 240;
         private int screenScale = 1;
+        public Keys[,] Controls { get; private set; }
 
         //State
         private Color[] frameBuffer;
@@ -41,6 +42,17 @@ namespace LotusNES.Frontend
         protected override void Initialize()
         {
             Window.Title = "LotusNES";
+
+            Controls = new Keys[2, 8];
+            Controls[0, 0] = Keys.Z;
+            Controls[0, 1] = Keys.X;
+            Controls[0, 2] = Keys.A;
+            Controls[0, 3] = Keys.S;
+            Controls[0, 4] = Keys.Up;
+            Controls[0, 5] = Keys.Down;
+            Controls[0, 6] = Keys.Left;
+            Controls[0, 7] = Keys.Right;
+
 
             sb = new SpriteBatch(GraphicsDevice);
             blank = new Texture2D(GraphicsDevice, 1, 1);
@@ -72,21 +84,8 @@ namespace LotusNES.Frontend
 
                 //Input
                 KeyboardState KB = Keyboard.GetState();
-                GamePadState GP = GamePad.GetState(PlayerIndex.One);
-                bool[] inputs = new bool[] 
-                {
-                    KB.IsKeyDown(Keys.Z) || GP.IsButtonDown(Buttons.A) || GP.IsButtonDown(Buttons.LeftShoulder)  || GP.IsButtonDown(Buttons.LeftTrigger),
-                    KB.IsKeyDown(Keys.X) || GP.IsButtonDown(Buttons.B) || GP.IsButtonDown(Buttons.RightShoulder) || GP.IsButtonDown(Buttons.RightTrigger),
-
-                    KB.IsKeyDown(Keys.A) || GP.IsButtonDown(Buttons.Back),
-                    KB.IsKeyDown(Keys.S) || GP.IsButtonDown(Buttons.Start),
-
-                    KB.IsKeyDown(Keys.Up)    || GP.IsButtonDown(Buttons.LeftThumbstickUp)    || GP.IsButtonDown(Buttons.DPadUp),
-                    KB.IsKeyDown(Keys.Down)  || GP.IsButtonDown(Buttons.LeftThumbstickDown)  || GP.IsButtonDown(Buttons.DPadDown),
-                    KB.IsKeyDown(Keys.Left)  || GP.IsButtonDown(Buttons.LeftThumbstickLeft)  || GP.IsButtonDown(Buttons.DPadLeft),
-                    KB.IsKeyDown(Keys.Right) || GP.IsButtonDown(Buttons.LeftThumbstickRight) || GP.IsButtonDown(Buttons.DPadRight),
-                };
-                Emulator.Controller1.SetButtons(inputs);
+                HandleInput(KB, 0);
+                HandleInput(KB, 1);
 
                 //Draw frame
                 for (int i = 0; i < screenWidth * screenHeight; i++)
@@ -99,7 +98,7 @@ namespace LotusNES.Frontend
                 {                                
                     while (Emulator.NetPlayServer.GetPeerInputAvailable())
                     {
-                        Emulator.Controller2.SetButtons(Emulator.NetPlayServer.GetPeerInput());
+                        Emulator.Controllers[1].SetButtons(Emulator.NetPlayServer.GetPeerInput());
                     }
                 }
 
@@ -130,6 +129,25 @@ namespace LotusNES.Frontend
             }
 
             base.Draw(gameTime);
+        }
+
+        private void HandleInput(KeyboardState KB, int player)
+        {
+            GamePadState GP = GamePad.GetState(player);
+            bool[] inputs = new bool[]
+            {
+                    KB.IsKeyDown(Controls[player, 0]) || GP.IsButtonDown(Buttons.B) || GP.IsButtonDown(Buttons.LeftShoulder)  || GP.IsButtonDown(Buttons.LeftTrigger),
+                    KB.IsKeyDown(Controls[player, 1]) || GP.IsButtonDown(Buttons.A) || GP.IsButtonDown(Buttons.RightShoulder) || GP.IsButtonDown(Buttons.RightTrigger),
+                            
+                    KB.IsKeyDown(Controls[player, 2]) || GP.IsButtonDown(Buttons.Back),
+                    KB.IsKeyDown(Controls[player, 3]) || GP.IsButtonDown(Buttons.Start),
+                              
+                    KB.IsKeyDown(Controls[player, 4]) || GP.IsButtonDown(Buttons.LeftThumbstickUp)    || GP.IsButtonDown(Buttons.DPadUp),
+                    KB.IsKeyDown(Controls[player, 5]) || GP.IsButtonDown(Buttons.LeftThumbstickDown)  || GP.IsButtonDown(Buttons.DPadDown),
+                    KB.IsKeyDown(Controls[player, 6]) || GP.IsButtonDown(Buttons.LeftThumbstickLeft)  || GP.IsButtonDown(Buttons.DPadLeft),
+                    KB.IsKeyDown(Controls[player, 7]) || GP.IsButtonDown(Buttons.LeftThumbstickRight) || GP.IsButtonDown(Buttons.DPadRight),
+            };
+            Emulator.Controllers[player].SetButtons(inputs);
         }
 
         private void HandleAudio()

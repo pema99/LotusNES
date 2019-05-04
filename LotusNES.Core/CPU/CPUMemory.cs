@@ -34,11 +34,11 @@ namespace LotusNES.Core
                 //TODO: Implement APU
                 if (address == 0x4016)
                 {
-                    result = Emulator.Controller1.ReadControllerRegister();
+                    result = Emulator.Controllers[0].ReadControllerRegister();
                 }
                 else if (address == 0x4017)
                 {
-                    result = Emulator.Controller2.ReadControllerRegister();
+                    result = Emulator.Controllers[1].ReadControllerRegister();
                 }
                 else if (address == 0x4015)
                 {
@@ -85,8 +85,8 @@ namespace LotusNES.Core
                 //Strobe both controllers
                 if (address == 0x4016 || address == 0x4017)
                 {                
-                    Emulator.Controller1.WriteControllerRegister(data);
-                    Emulator.Controller2.WriteControllerRegister(data); //TODO: Is this right, or should it only strobe on 0x4016
+                    Emulator.Controllers[0].WriteControllerRegister(data);
+                    Emulator.Controllers[1].WriteControllerRegister(data); //TODO: Is this right, or should it only strobe on 0x4016
                 }
                 else
                 {

@@ -4,15 +4,27 @@ using LotusNES.Core;
 
 namespace LotusNES.Frontend
 {
-    public partial class MainForm : Form
+    public partial class MainForm : DoubleBufferedForm
     {
         private GameGenieForm gameGenieForm = new GameGenieForm();
         private PPUViewForm ppuViewForm = new PPUViewForm();
         private NameTableForm nameTableForm = new NameTableForm();
 
+        private InputForm inputForm = new InputForm();
+
         public MainForm()
         {
             InitializeComponent();
+        }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+                return cp;
+            }
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -165,6 +177,18 @@ namespace LotusNES.Frontend
                 CheckMute.Text = "Disable APU (may improve performance)";
                 Emulator.DisableAPU = SliderVolume.Value == 0;
                 SliderVolume.Enabled = true;
+            }
+        }
+
+        private void ButtonInput_Click(object sender, EventArgs e)
+        {
+            if (inputForm.Visible)
+            {
+                inputForm.WindowState = FormWindowState.Normal;
+            }
+            else
+            {
+                inputForm.Show();
             }
         }
     }

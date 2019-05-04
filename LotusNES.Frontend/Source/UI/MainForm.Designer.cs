@@ -35,6 +35,7 @@
             this.LabelSpeed = new System.Windows.Forms.Label();
             this.SliderSpeed = new System.Windows.Forms.TrackBar();
             this.TabSettings = new System.Windows.Forms.TabPage();
+            this.CheckMute = new System.Windows.Forms.CheckBox();
             this.ButtonGameGenie = new System.Windows.Forms.Button();
             this.LabelVolume = new System.Windows.Forms.Label();
             this.SliderVolume = new System.Windows.Forms.TrackBar();
@@ -44,7 +45,7 @@
             this.TabDebug = new System.Windows.Forms.TabPage();
             this.ButtonNametables = new System.Windows.Forms.Button();
             this.ButtonPPUView = new System.Windows.Forms.Button();
-            this.CheckMute = new System.Windows.Forms.CheckBox();
+            this.ButtonInput = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.NumberPort)).BeginInit();
             this.TabsMenu.SuspendLayout();
             this.TabFile.SuspendLayout();
@@ -240,6 +241,7 @@
             // TabSettings
             // 
             this.TabSettings.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.TabSettings.Controls.Add(this.ButtonInput);
             this.TabSettings.Controls.Add(this.CheckMute);
             this.TabSettings.Controls.Add(this.ButtonGameGenie);
             this.TabSettings.Controls.Add(this.LabelVolume);
@@ -252,9 +254,21 @@
             this.TabSettings.TabIndex = 4;
             this.TabSettings.Text = "Settings";
             // 
+            // CheckMute
+            // 
+            this.CheckMute.Appearance = System.Windows.Forms.Appearance.Button;
+            this.CheckMute.AutoSize = true;
+            this.CheckMute.Location = new System.Drawing.Point(6, 100);
+            this.CheckMute.Name = "CheckMute";
+            this.CheckMute.Size = new System.Drawing.Size(207, 23);
+            this.CheckMute.TabIndex = 17;
+            this.CheckMute.Text = "Disable APU (may improve performance)";
+            this.CheckMute.UseVisualStyleBackColor = true;
+            this.CheckMute.CheckedChanged += new System.EventHandler(this.CheckMute_CheckedChanged);
+            // 
             // ButtonGameGenie
             // 
-            this.ButtonGameGenie.Location = new System.Drawing.Point(6, 30);
+            this.ButtonGameGenie.Location = new System.Drawing.Point(6, 59);
             this.ButtonGameGenie.Name = "ButtonGameGenie";
             this.ButtonGameGenie.Size = new System.Drawing.Size(110, 23);
             this.ButtonGameGenie.TabIndex = 16;
@@ -357,17 +371,15 @@
             this.ButtonPPUView.UseVisualStyleBackColor = true;
             this.ButtonPPUView.Click += new System.EventHandler(this.ButtonPPUView_Click);
             // 
-            // CheckMute
+            // ButtonInput
             // 
-            this.CheckMute.Appearance = System.Windows.Forms.Appearance.Button;
-            this.CheckMute.AutoSize = true;
-            this.CheckMute.Location = new System.Drawing.Point(6, 100);
-            this.CheckMute.Name = "CheckMute";
-            this.CheckMute.Size = new System.Drawing.Size(207, 23);
-            this.CheckMute.TabIndex = 17;
-            this.CheckMute.Text = "Disable APU (may improve performance)";
-            this.CheckMute.UseVisualStyleBackColor = true;
-            this.CheckMute.CheckedChanged += new System.EventHandler(this.CheckMute_CheckedChanged);
+            this.ButtonInput.Location = new System.Drawing.Point(6, 30);
+            this.ButtonInput.Name = "ButtonInput";
+            this.ButtonInput.Size = new System.Drawing.Size(110, 23);
+            this.ButtonInput.TabIndex = 18;
+            this.ButtonInput.Text = "Configure controls";
+            this.ButtonInput.UseVisualStyleBackColor = true;
+            this.ButtonInput.Click += new System.EventHandler(this.ButtonInput_Click);
             // 
             // MainForm
             // 
@@ -428,6 +440,7 @@
         private System.Windows.Forms.Button ButtonPPUView;
         private System.Windows.Forms.Button ButtonNametables;
         private System.Windows.Forms.CheckBox CheckMute;
+        private System.Windows.Forms.Button ButtonInput;
     }
 }
 
