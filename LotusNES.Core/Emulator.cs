@@ -95,7 +95,7 @@ namespace LotusNES.Core
                     HandleIO();
                     DoFrame();
                 }
-                catch (Exception e)// when (!Debugger.IsAttached)
+                catch (Exception e) when (!Debugger.IsAttached)
                 {
                     //Stop emulation, show error
                     Running = false;

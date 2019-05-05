@@ -29,62 +29,65 @@ namespace LotusNES.Core
 
         private readonly int[] InstructionAddressMode = new int[256]
         {
-            5, 6, 5, 6, 10, 10, 10, 10, 5, 4, 3, 4, 0, 0, 0, 0,
-            9, 8, 5, 8, 11, 11, 11, 11, 5, 2, 5, 2, 1, 1, 1, 1,
-            0, 6, 5, 6, 10, 10, 10, 10, 5, 4, 3, 4, 0, 0, 0, 0,
-            9, 8, 5, 8, 11, 11, 11, 11, 5, 2, 5, 2, 1, 1, 1, 1,
-            5, 6, 5, 6, 10, 10, 10, 10, 5, 4, 3, 4, 0, 0, 0, 0,
-            9, 8, 5, 8, 11, 11, 11, 11, 5, 2, 5, 2, 1, 1, 1, 1,
-            5, 6, 5, 6, 10, 10, 10, 10, 5, 4, 3, 4, 7, 0, 0, 0,
-            9, 8, 5, 8, 11, 11, 11, 11, 5, 2, 5, 2, 1, 1, 1, 1,
-            4, 6, 4, 6, 10, 10, 10, 10, 5, 4, 5, 4, 0, 0, 0, 0,
-            9, 8, 5, 8, 11, 11, 12, 12, 5, 2, 5, 2, 1, 1, 2, 2,
-            4, 6, 4, 6, 10, 10, 10, 10, 5, 4, 5, 4, 0, 0, 0, 0,
-            9, 8, 5, 8, 11, 11, 12, 12, 5, 2, 5, 2, 1, 1, 2, 2,
-            4, 6, 4, 6, 10, 10, 10, 10, 5, 4, 5, 4, 0, 0, 0, 0,
-            9, 8, 5, 8, 11, 11, 11, 11, 5, 2, 5, 2, 1, 1, 1, 1,
-            4, 6, 4, 6, 10, 10, 10, 10, 5, 4, 5, 4, 0, 0, 0, 0,
-            9, 8, 5, 8, 11, 11, 11, 11, 5, 2, 5, 2, 1, 1, 1, 1,
+          //0  1  2  3  4   5   6   7   8  9  A  B  C  D  E  F
+            5, 6, 5, 6, 10, 10, 10, 10, 5, 4, 3, 4, 0, 0, 0, 0, //0
+            9, 8, 5, 8, 11, 11, 11, 11, 5, 2, 5, 2, 1, 1, 1, 1, //1
+            0, 6, 5, 6, 10, 10, 10, 10, 5, 4, 3, 4, 0, 0, 0, 0, //2
+            9, 8, 5, 8, 11, 11, 11, 11, 5, 2, 5, 2, 1, 1, 1, 1, //3
+            5, 6, 5, 6, 10, 10, 10, 10, 5, 4, 3, 4, 0, 0, 0, 0, //4
+            9, 8, 5, 8, 11, 11, 11, 11, 5, 2, 5, 2, 1, 1, 1, 1, //5
+            5, 6, 5, 6, 10, 10, 10, 10, 5, 4, 3, 4, 7, 0, 0, 0, //6
+            9, 8, 5, 8, 11, 11, 11, 11, 5, 2, 5, 2, 1, 1, 1, 1, //7
+            4, 6, 4, 6, 10, 10, 10, 10, 5, 4, 5, 4, 0, 0, 0, 0, //8
+            9, 8, 5, 8, 11, 11, 12, 12, 5, 2, 5, 2, 1, 1, 2, 2, //9
+            4, 6, 4, 6, 10, 10, 10, 10, 5, 4, 5, 4, 0, 0, 0, 0, //A
+            9, 8, 5, 8, 11, 11, 12, 12, 5, 2, 5, 2, 1, 1, 2, 2, //B
+            4, 6, 4, 6, 10, 10, 10, 10, 5, 4, 5, 4, 0, 0, 0, 0, //C
+            9, 8, 5, 8, 11, 11, 11, 11, 5, 2, 5, 2, 1, 1, 1, 1, //D
+            4, 6, 4, 6, 10, 10, 10, 10, 5, 4, 5, 4, 0, 0, 0, 0, //E
+            9, 8, 5, 8, 11, 11, 11, 11, 5, 2, 5, 2, 1, 1, 1, 1, //F
         };
 
         private readonly int[] InstructionCycles = new int[256]
         {
-            7, 6, 2, 8, 3, 3, 5, 5, 3, 2, 2, 2, 4, 4, 6, 6,
-            2, 5, 2, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7,
-            6, 6, 2, 8, 3, 3, 5, 5, 4, 2, 2, 2, 4, 4, 6, 6,
-            2, 5, 2, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7,
-            6, 6, 2, 8, 3, 3, 5, 5, 3, 2, 2, 2, 3, 4, 6, 6,
-            2, 5, 2, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7,
-            6, 6, 2, 8, 3, 3, 5, 5, 4, 2, 2, 2, 5, 4, 6, 6,
-            2, 5, 2, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7,
-            2, 6, 2, 6, 3, 3, 3, 3, 2, 2, 2, 2, 4, 4, 4, 4,
-            2, 6, 2, 6, 4, 4, 4, 4, 2, 5, 2, 5, 5, 5, 5, 5,
-            2, 6, 2, 6, 3, 3, 3, 3, 2, 2, 2, 2, 4, 4, 4, 4,
-            2, 5, 2, 5, 4, 4, 4, 4, 2, 4, 2, 4, 4, 4, 4, 4,
-            2, 6, 2, 8, 3, 3, 5, 5, 2, 2, 2, 2, 4, 4, 6, 6,
-            2, 5, 2, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7,
-            2, 6, 2, 8, 3, 3, 5, 5, 2, 2, 2, 2, 4, 4, 6, 6,
-            2, 5, 2, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7,
+          //0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+            7, 6, 2, 8, 3, 3, 5, 5, 3, 2, 2, 2, 4, 4, 6, 6, //0
+            2, 5, 2, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7, //1
+            6, 6, 2, 8, 3, 3, 5, 5, 4, 2, 2, 2, 4, 4, 6, 6, //2
+            2, 5, 2, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7, //3
+            6, 6, 2, 8, 3, 3, 5, 5, 3, 2, 2, 2, 3, 4, 6, 6, //4
+            2, 5, 2, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7, //5
+            6, 6, 2, 8, 3, 3, 5, 5, 4, 2, 2, 2, 5, 4, 6, 6, //6
+            2, 5, 2, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7, //7
+            2, 6, 2, 6, 3, 3, 3, 3, 2, 2, 2, 2, 4, 4, 4, 4, //8
+            2, 6, 2, 6, 4, 4, 4, 4, 2, 5, 2, 5, 5, 5, 5, 5, //9
+            2, 6, 2, 6, 3, 3, 3, 3, 2, 2, 2, 2, 4, 4, 4, 4, //A
+            2, 5, 2, 5, 4, 4, 4, 4, 2, 4, 2, 4, 4, 4, 4, 4, //B
+            2, 6, 2, 8, 3, 3, 5, 5, 2, 2, 2, 2, 4, 4, 6, 6, //C
+            2, 5, 2, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7, //D
+            2, 6, 2, 8, 3, 3, 5, 5, 2, 2, 2, 2, 4, 4, 6, 6, //E
+            2, 5, 2, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7, //F
         };
 
         private readonly bool[] InstructionPageCrossCycles = new bool[256]
         {
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            true,  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            true,  true,  false, true,  false, false, false, false, false, true,  false, true,  true,  true,  true,  true,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false
+            //0    1      2      3      4      5      6      7      8      9      A      B      C      D      E      F
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, //0
+            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false, //1
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, //2
+            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false, //3
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, //4
+            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false, //5
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, //6
+            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false, //7
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, //8
+            true,  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, //9
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, //A
+            true,  true,  false, true,  false, false, false, false, false, true,  false, true,  true,  true,  true,  true,  //B
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, //C
+            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false, //D
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, //E
+            true,  true,  false, false, false, false, false, false, false, true,  false, false, true,  true,  false, false  //F
         };
         #endregion
 
@@ -116,22 +119,22 @@ namespace LotusNES.Core
             this.Instructions = new Instruction[256] 
             {
                 //0      1      2      3      4      5      6      7      8      9      A      B      C      D      E      F
-                OpBRK, OpORA, OpERR, OpERR, OpERR, OpORA, OpASL, OpERR, OpPHP, OpORA, OpASL, OpERR, OpERR, OpORA, OpASL, OpERR, //0
-                OpBPL, OpORA, OpERR, OpERR, OpERR, OpORA, OpASL, OpERR, OpCLC, OpORA, OpERR, OpERR, OpERR, OpORA, OpASL, OpERR, //1
-                OpJSR, OpAND, OpERR, OpERR, OpBIT, OpAND, OpROL, OpERR, OpPLP, OpAND, OpROL, OpERR, OpBIT, OpAND, OpROL, OpERR, //2
-                OpBMI, OpAND, OpERR, OpERR, OpERR, OpAND, OpROL, OpERR, OpSEC, OpAND, OpERR, OpERR, OpERR, OpAND, OpROL, OpERR, //3
-                OpRTI, OpEOR, OpERR, OpERR, OpERR, OpEOR, OpLSR, OpERR, OpPHA, OpEOR, OpLSR, OpERR, OpJMP, OpEOR, OpLSR, OpERR, //4
-                OpBVC, OpEOR, OpERR, OpERR, OpERR, OpEOR, OpLSR, OpERR, OpCLI, OpEOR, OpERR, OpERR, OpERR, OpEOR, OpLSR, OpERR, //5
-                OpRTS, OpADC, OpERR, OpERR, OpERR, OpADC, OpROR, OpERR, OpPLA, OpADC, OpROR, OpERR, OpJMP, OpADC, OpROR, OpERR, //6
-                OpBVS, OpADC, OpERR, OpERR, OpERR, OpADC, OpROR, OpERR, OpSEI, OpADC, OpERR, OpERR, OpERR, OpADC, OpROR, OpERR, //7
-                OpERR, OpSTA, OpERR, OpERR, OpSTY, OpSTA, OpSTX, OpERR, OpDEY, OpERR, OpTXA, OpERR, OpSTY, OpSTA, OpSTX, OpERR, //8
-                OpBCC, OpSTA, OpERR, OpERR, OpSTY, OpSTA, OpSTX, OpERR, OpTYA, OpSTA, OpTXS, OpERR, OpERR, OpSTA, OpERR, OpERR, //9
-                OpLDY, OpLDA, OpLDX, OpERR, OpLDY, OpLDA, OpLDX, OpERR, OpTAY, OpLDA, OpTAX, OpERR, OpLDY, OpLDA, OpLDX, OpERR, //A
-                OpBCS, OpLDA, OpERR, OpERR, OpLDY, OpLDA, OpLDX, OpERR, OpCLV, OpLDA, OpTSX, OpERR, OpLDY, OpLDA, OpLDX, OpERR, //B
-                OpCPY, OpCMP, OpERR, OpERR, OpCPY, OpCMP, OpDEC, OpERR, OpINY, OpCMP, OpDEX, OpERR, OpCPY, OpCMP, OpDEC, OpERR, //C
-                OpBNE, OpCMP, OpERR, OpERR, OpERR, OpCMP, OpDEC, OpERR, OpCLD, OpCMP, OpERR, OpERR, OpERR, OpCMP, OpDEC, OpERR, //D
-                OpCPX, OpSBC, OpERR, OpERR, OpCPX, OpSBC, OpINC, OpERR, OpINX, OpSBC, OpNOP, OpERR, OpCPX, OpSBC, OpINC, OpERR, //E
-                OpBEQ, OpSBC, OpERR, OpERR, OpERR, OpSBC, OpINC, OpERR, OpSED, OpSBC, OpERR, OpERR, OpERR, OpSBC, OpINC, OpERR  //F
+                OpBRK, OpORA, OpERR, OpSLO, OpERR, OpORA, OpASL, OpSLO, OpPHP, OpORA, OpASL, OpERR, OpERR, OpORA, OpASL, OpSLO, //0
+                OpBPL, OpORA, OpERR, OpSLO, OpERR, OpORA, OpASL, OpSLO, OpCLC, OpORA, OpNOP, OpSLO, OpERR, OpORA, OpASL, OpSLO, //1
+                OpJSR, OpAND, OpERR, OpRLA, OpBIT, OpAND, OpROL, OpRLA, OpPLP, OpAND, OpROL, OpERR, OpBIT, OpAND, OpROL, OpRLA, //2
+                OpBMI, OpAND, OpERR, OpRLA, OpERR, OpAND, OpROL, OpRLA, OpSEC, OpAND, OpNOP, OpRLA, OpERR, OpAND, OpROL, OpRLA, //3
+                OpRTI, OpEOR, OpERR, OpSRE, OpERR, OpEOR, OpLSR, OpSRE, OpPHA, OpEOR, OpLSR, OpERR, OpJMP, OpEOR, OpLSR, OpSRE, //4
+                OpBVC, OpEOR, OpERR, OpSRE, OpERR, OpEOR, OpLSR, OpSRE, OpCLI, OpEOR, OpNOP, OpSRE, OpERR, OpEOR, OpLSR, OpSRE, //5
+                OpRTS, OpADC, OpERR, OpRRA, OpERR, OpADC, OpROR, OpRRA, OpPLA, OpADC, OpROR, OpERR, OpJMP, OpADC, OpROR, OpRRA, //6
+                OpBVS, OpADC, OpERR, OpRRA, OpERR, OpADC, OpROR, OpRRA, OpSEI, OpADC, OpNOP, OpRRA, OpERR, OpADC, OpROR, OpRRA, //7
+                OpERR, OpSTA, OpERR, OpSAX, OpSTY, OpSTA, OpSTX, OpSAX, OpDEY, OpERR, OpTXA, OpERR, OpSTY, OpSTA, OpSTX, OpSAX, //8
+                OpBCC, OpSTA, OpERR, OpERR, OpSTY, OpSTA, OpSTX, OpSAX, OpTYA, OpSTA, OpTXS, OpERR, OpERR, OpSTA, OpERR, OpERR, //9
+                OpLDY, OpLDA, OpLDX, OpLAX, OpLDY, OpLDA, OpLDX, OpLAX, OpTAY, OpLDA, OpTAX, OpERR, OpLDY, OpLDA, OpLDX, OpLAX, //A
+                OpBCS, OpLDA, OpERR, OpLAX, OpLDY, OpLDA, OpLDX, OpLAX, OpCLV, OpLDA, OpTSX, OpERR, OpLDY, OpLDA, OpLDX, OpLAX, //B
+                OpCPY, OpCMP, OpERR, OpDCP, OpCPY, OpCMP, OpDEC, OpDCP, OpINY, OpCMP, OpDEX, OpERR, OpCPY, OpCMP, OpDEC, OpDCP, //C
+                OpBNE, OpCMP, OpERR, OpDCP, OpERR, OpCMP, OpDEC, OpDCP, OpCLD, OpCMP, OpNOP, OpDCP, OpERR, OpCMP, OpDEC, OpDCP, //D
+                OpCPX, OpSBC, OpERR, OpISB, OpCPX, OpSBC, OpINC, OpISB, OpINX, OpSBC, OpNOP, OpSBC, OpCPX, OpSBC, OpINC, OpISB, //E
+                OpBEQ, OpSBC, OpERR, OpISB, OpERR, OpSBC, OpINC, OpISB, OpSED, OpSBC, OpNOP, OpISB, OpERR, OpSBC, OpINC, OpISB  //F
             };
 
             this.AddressModes = new AddressMode[13]
@@ -455,8 +458,9 @@ namespace LotusNES.Core
 
         private void OpBRK(ushort address, int addressMode)
         {
+            pc++;
             PushStack16(pc);
-            PushStack(status);
+            PushStack((byte)(status | 0b110000));
 
             SetStatus(StatusBreakCommand, true);
 
@@ -815,6 +819,55 @@ namespace LotusNES.Core
 
         private void OpNOP(ushort address, int addressMode)
         {
+        }
+
+        //Begin illegal opcodes
+        private void OpSLO(ushort address, int addressMode)
+        {
+            OpASL(address, addressMode);
+            OpORA(address, addressMode);
+        }
+
+        private void OpRLA(ushort address, int addressMode)
+        {
+            OpROL(address, addressMode);
+            OpAND(address, addressMode);
+        }
+
+        private void OpSRE(ushort address, int addressMode)
+        {
+            OpLSR(address, addressMode);
+            OpEOR(address, addressMode);
+        }
+
+        private void OpRRA(ushort address, int addressMode)
+        {
+            OpROR(address, addressMode);
+            OpADC(address, addressMode);
+        }
+
+        private void OpSAX(ushort address, int addressMode)
+        {
+            byte result = (byte)(a & x);
+            Memory.Write(address, result);
+        }
+
+        private void OpLAX(ushort address, int addressMode)
+        {
+            OpLDA(address, addressMode);
+            OpLDX(address, addressMode);
+        }
+
+        private void OpDCP(ushort address, int addressMode)
+        {
+            OpDEC(address, addressMode);
+            OpCMP(address, addressMode);
+        }
+
+        private void OpISB(ushort address, int addressMode)
+        {
+            OpINC(address, addressMode);
+            OpSBC(address, addressMode);
         }
         #endregion
 
