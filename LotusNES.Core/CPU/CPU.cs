@@ -119,19 +119,19 @@ namespace LotusNES.Core
             this.Instructions = new Instruction[256] 
             {
                 //0      1      2      3      4      5      6      7      8      9      A      B      C      D      E      F
-                OpBRK, OpORA, OpERR, OpSLO, OpERR, OpORA, OpASL, OpSLO, OpPHP, OpORA, OpASL, OpERR, OpERR, OpORA, OpASL, OpSLO, //0
+                OpBRK, OpORA, OpERR, OpSLO, OpERR, OpORA, OpASL, OpSLO, OpPHP, OpORA, OpASL, OpAAC, OpERR, OpORA, OpASL, OpSLO, //0
                 OpBPL, OpORA, OpERR, OpSLO, OpERR, OpORA, OpASL, OpSLO, OpCLC, OpORA, OpNOP, OpSLO, OpERR, OpORA, OpASL, OpSLO, //1
-                OpJSR, OpAND, OpERR, OpRLA, OpBIT, OpAND, OpROL, OpRLA, OpPLP, OpAND, OpROL, OpERR, OpBIT, OpAND, OpROL, OpRLA, //2
+                OpJSR, OpAND, OpERR, OpRLA, OpBIT, OpAND, OpROL, OpRLA, OpPLP, OpAND, OpROL, OpAAC, OpBIT, OpAND, OpROL, OpRLA, //2
                 OpBMI, OpAND, OpERR, OpRLA, OpERR, OpAND, OpROL, OpRLA, OpSEC, OpAND, OpNOP, OpRLA, OpERR, OpAND, OpROL, OpRLA, //3
-                OpRTI, OpEOR, OpERR, OpSRE, OpERR, OpEOR, OpLSR, OpSRE, OpPHA, OpEOR, OpLSR, OpERR, OpJMP, OpEOR, OpLSR, OpSRE, //4
+                OpRTI, OpEOR, OpERR, OpSRE, OpERR, OpEOR, OpLSR, OpSRE, OpPHA, OpEOR, OpLSR, OpASR, OpJMP, OpEOR, OpLSR, OpSRE, //4
                 OpBVC, OpEOR, OpERR, OpSRE, OpERR, OpEOR, OpLSR, OpSRE, OpCLI, OpEOR, OpNOP, OpSRE, OpERR, OpEOR, OpLSR, OpSRE, //5
-                OpRTS, OpADC, OpERR, OpRRA, OpERR, OpADC, OpROR, OpRRA, OpPLA, OpADC, OpROR, OpERR, OpJMP, OpADC, OpROR, OpRRA, //6
+                OpRTS, OpADC, OpERR, OpRRA, OpERR, OpADC, OpROR, OpRRA, OpPLA, OpADC, OpROR, OpARR, OpJMP, OpADC, OpROR, OpRRA, //6
                 OpBVS, OpADC, OpERR, OpRRA, OpERR, OpADC, OpROR, OpRRA, OpSEI, OpADC, OpNOP, OpRRA, OpERR, OpADC, OpROR, OpRRA, //7
                 OpERR, OpSTA, OpERR, OpSAX, OpSTY, OpSTA, OpSTX, OpSAX, OpDEY, OpERR, OpTXA, OpERR, OpSTY, OpSTA, OpSTX, OpSAX, //8
-                OpBCC, OpSTA, OpERR, OpERR, OpSTY, OpSTA, OpSTX, OpSAX, OpTYA, OpSTA, OpTXS, OpERR, OpERR, OpSTA, OpERR, OpERR, //9
-                OpLDY, OpLDA, OpLDX, OpLAX, OpLDY, OpLDA, OpLDX, OpLAX, OpTAY, OpLDA, OpTAX, OpERR, OpLDY, OpLDA, OpLDX, OpLAX, //A
+                OpBCC, OpSTA, OpERR, OpERR, OpSTY, OpSTA, OpSTX, OpSAX, OpTYA, OpSTA, OpTXS, OpERR, OpSYA, OpSTA, OpSXA, OpERR, //9
+                OpLDY, OpLDA, OpLDX, OpLAX, OpLDY, OpLDA, OpLDX, OpLAX, OpTAY, OpLDA, OpTAX, OpATX, OpLDY, OpLDA, OpLDX, OpLAX, //A
                 OpBCS, OpLDA, OpERR, OpLAX, OpLDY, OpLDA, OpLDX, OpLAX, OpCLV, OpLDA, OpTSX, OpERR, OpLDY, OpLDA, OpLDX, OpLAX, //B
-                OpCPY, OpCMP, OpERR, OpDCP, OpCPY, OpCMP, OpDEC, OpDCP, OpINY, OpCMP, OpDEX, OpERR, OpCPY, OpCMP, OpDEC, OpDCP, //C
+                OpCPY, OpCMP, OpERR, OpDCP, OpCPY, OpCMP, OpDEC, OpDCP, OpINY, OpCMP, OpDEX, OpAXS, OpCPY, OpCMP, OpDEC, OpDCP, //C
                 OpBNE, OpCMP, OpERR, OpDCP, OpERR, OpCMP, OpDEC, OpDCP, OpCLD, OpCMP, OpNOP, OpDCP, OpERR, OpCMP, OpDEC, OpDCP, //D
                 OpCPX, OpSBC, OpERR, OpISB, OpCPX, OpSBC, OpINC, OpISB, OpINX, OpSBC, OpNOP, OpSBC, OpCPX, OpSBC, OpINC, OpISB, //E
                 OpBEQ, OpSBC, OpERR, OpISB, OpERR, OpSBC, OpINC, OpISB, OpSED, OpSBC, OpNOP, OpISB, OpERR, OpSBC, OpINC, OpISB  //F
@@ -462,7 +462,7 @@ namespace LotusNES.Core
             PushStack16(pc);
             PushStack((byte)(status | 0b110000));
 
-            SetStatus(StatusBreakCommand, true);
+            SetStatus(StatusInterruptDisable, true);
 
             pc = Memory.Read16(BRKAddress);
         }
@@ -821,7 +821,7 @@ namespace LotusNES.Core
         {
         }
 
-        //Begin illegal opcodes
+        //Illegal opcodes start here
         private void OpSLO(ushort address, int addressMode)
         {
             OpASL(address, addressMode);
@@ -868,6 +868,86 @@ namespace LotusNES.Core
         {
             OpINC(address, addressMode);
             OpSBC(address, addressMode);
+        }
+
+        private void OpAAC(ushort address, int addressMode)
+        {
+            a &= Memory.Read(address);
+
+            SetZeroSign(a);
+            SetStatus(StatusCarryFlag, GetStatus(StatusNegativeFlag));
+        }
+
+        private void OpASR(ushort address, int addressMode)
+        {
+            OpAND(address, addressMode);
+            OpLSR(address, 3);
+        }
+
+        private void OpARR(ushort address, int addressMode)
+        {
+            OpAND(address, addressMode);
+            OpROR(address, 3);
+
+            switch ((a & 0b1100000) >> 5)
+            {
+                case 0b11:
+                    SetStatus(StatusCarryFlag, true);
+                    SetStatus(StatusOverflowFlag, false);
+                    break;
+
+                case 0b00:
+                    SetStatus(StatusCarryFlag, false);
+                    SetStatus(StatusOverflowFlag, false);
+                    break;
+
+                case 0b01:
+                    SetStatus(StatusCarryFlag, false);
+                    SetStatus(StatusOverflowFlag, true);
+                    break;
+
+                case 0b10:
+                    SetStatus(StatusCarryFlag, true);
+                    SetStatus(StatusOverflowFlag, true);
+                    break;
+            }
+        }
+
+        private void OpATX(ushort address, int addressMode)
+        {
+            //According to Mesen source
+            OpLDA(address, addressMode);
+            OpTAX(address, addressMode);
+        }
+
+        private void OpAXS(ushort address, int addressMode)
+        {
+            byte result = (byte)(a & x);
+            byte sub = Memory.Read(address);
+
+            SetStatus(StatusCarryFlag, result >= sub);
+            SetZeroSign((byte)(result - sub));
+
+            result -= sub;
+            x = result;
+        }
+
+        private void OpSXA(ushort address, int addressMode)
+        {
+            //Yoinked this from Mesen
+            byte addrHigh = (byte)(address >> 8);
+            byte addrLow = (byte)(address & 0xFF);
+            byte value = (byte)(x & (addrHigh + 1));
+            Memory.Write((ushort)(((x & (addrHigh + 1)) << 8) | addrLow), value);
+        }
+
+        private void OpSYA(ushort address, int addressMode)
+        {
+            //Yoinked this from Mesen
+            byte addrHigh = (byte)(address >> 8);
+            byte addrLow = (byte)(address & 0xFF);
+            byte value = (byte)(y & (addrHigh + 1));
+            Memory.Write((ushort)(((y & (addrHigh + 1)) << 8) | addrLow), value);
         }
         #endregion
 

@@ -42,12 +42,12 @@ namespace LotusNES.Core
                 //0000 - 0FFF is chr bank 0
                 if (address < 0x1000)
                 {
-                    return Emulator.GamePak.ReadCharROM(chrBank0Base + address);
+                    return Emulator.GamePak.ReadCharROM((chrBank0Base + address) % 0x2000);
                 }
                 //1000 - 1FFF is 1
                 else
                 {
-                    return Emulator.GamePak.ReadCharROM(chrBank1Base + (address % 0x1000));
+                    return Emulator.GamePak.ReadCharROM((chrBank1Base + (address % 0x1000)) % 0x2000);
                 }
             }
 
@@ -91,12 +91,12 @@ namespace LotusNES.Core
                     //0000 - 0FFF is chr bank 0
                     if (address < 0x1000)
                     {
-                        Emulator.GamePak.WriteCharRAM(chrBank0Base + address, data);
+                        Emulator.GamePak.WriteCharRAM((chrBank0Base + address) % 0x2000, data);
                     }
                     //1000 - 1FFF is 1
                     else
                     {
-                        Emulator.GamePak.WriteCharRAM(chrBank1Base + (address % 0x1000), data);
+                        Emulator.GamePak.WriteCharRAM((chrBank1Base + (address % 0x1000)) % 0x2000, data);
                     }
                 }
             }
