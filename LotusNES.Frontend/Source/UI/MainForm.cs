@@ -107,7 +107,7 @@ namespace LotusNES.Frontend
 
             if (SFD.ShowDialog() == DialogResult.OK)
             {
-                Emulator.SaveState(SFD.FileName);
+                Emulator.SaveStateToFile(SFD.FileName);
             }
         }
 
@@ -118,7 +118,7 @@ namespace LotusNES.Frontend
 
             if (OFD.ShowDialog() == DialogResult.OK)
             {
-                Emulator.LoadState(OFD.FileName);
+                Emulator.LoadStateFromFile(OFD.FileName);
             }
         }
 
@@ -189,6 +189,26 @@ namespace LotusNES.Frontend
             else
             {
                 inputForm.Show();
+            }
+        }
+
+        private void ButtonStartRewind_Click(object sender, EventArgs e)
+        {
+            Emulator.StartRewinding();
+        }
+
+        private void ButtonStopRewind_Click(object sender, EventArgs e)
+        {
+            Emulator.StopRewinding();
+        }
+
+        private void CheckTrackHistory_CheckedChanged(object sender, EventArgs e)
+        {
+            Emulator.TrackHistory = CheckTrackHistory.Checked;
+            ButtonStopRewind.Enabled = ButtonStartRewind.Enabled = CheckTrackHistory.Checked;
+            if (!CheckTrackHistory.Checked)
+            {
+                Emulator.StopRewinding();
             }
         }
     }

@@ -58,7 +58,7 @@ namespace LotusNES.Core
 
         //Memory
         public PPUMemory Memory { get; private set; }
-        public byte[] FrameBuffer { get; private set; }
+        public byte[] FrameBuffer { get; set; }
         private byte[] OAM;
         private byte[] scanlineOAM;
         private int[] spriteOrder;

@@ -74,7 +74,7 @@ namespace LotusNES.Frontend
                 Exit();
             }
 
-            if (Emulator.Running)
+            if (Emulator.Running && Emulator.ShouldUpdate)
             {
                 //Handle audio, don't store too many buffers or we will lag
                 if (sound.PendingBufferCount < 5)

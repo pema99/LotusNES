@@ -31,10 +31,13 @@
             this.ButtonSaveState = new System.Windows.Forms.Button();
             this.ButtonLoadROM = new System.Windows.Forms.Button();
             this.TabMachine = new System.Windows.Forms.TabPage();
+            this.ButtonStopRewind = new System.Windows.Forms.Button();
+            this.ButtonStartRewind = new System.Windows.Forms.Button();
             this.CheckFilters = new System.Windows.Forms.CheckBox();
             this.LabelSpeed = new System.Windows.Forms.Label();
             this.SliderSpeed = new System.Windows.Forms.TrackBar();
             this.TabSettings = new System.Windows.Forms.TabPage();
+            this.ButtonInput = new System.Windows.Forms.Button();
             this.CheckMute = new System.Windows.Forms.CheckBox();
             this.ButtonGameGenie = new System.Windows.Forms.Button();
             this.LabelVolume = new System.Windows.Forms.Label();
@@ -45,7 +48,7 @@
             this.TabDebug = new System.Windows.Forms.TabPage();
             this.ButtonNametables = new System.Windows.Forms.Button();
             this.ButtonPPUView = new System.Windows.Forms.Button();
-            this.ButtonInput = new System.Windows.Forms.Button();
+            this.CheckTrackHistory = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.NumberPort)).BeginInit();
             this.TabsMenu.SuspendLayout();
             this.TabFile.SuspendLayout();
@@ -194,6 +197,9 @@
             // TabMachine
             // 
             this.TabMachine.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.TabMachine.Controls.Add(this.CheckTrackHistory);
+            this.TabMachine.Controls.Add(this.ButtonStopRewind);
+            this.TabMachine.Controls.Add(this.ButtonStartRewind);
             this.TabMachine.Controls.Add(this.CheckFilters);
             this.TabMachine.Controls.Add(this.LabelSpeed);
             this.TabMachine.Controls.Add(this.SliderSpeed);
@@ -204,6 +210,28 @@
             this.TabMachine.Size = new System.Drawing.Size(254, 190);
             this.TabMachine.TabIndex = 2;
             this.TabMachine.Text = "Machine";
+            // 
+            // ButtonStopRewind
+            // 
+            this.ButtonStopRewind.Enabled = false;
+            this.ButtonStopRewind.Location = new System.Drawing.Point(129, 90);
+            this.ButtonStopRewind.Name = "ButtonStopRewind";
+            this.ButtonStopRewind.Size = new System.Drawing.Size(122, 23);
+            this.ButtonStopRewind.TabIndex = 12;
+            this.ButtonStopRewind.Text = "Stop Rewind";
+            this.ButtonStopRewind.UseVisualStyleBackColor = true;
+            this.ButtonStopRewind.Click += new System.EventHandler(this.ButtonStopRewind_Click);
+            // 
+            // ButtonStartRewind
+            // 
+            this.ButtonStartRewind.Enabled = false;
+            this.ButtonStartRewind.Location = new System.Drawing.Point(3, 90);
+            this.ButtonStartRewind.Name = "ButtonStartRewind";
+            this.ButtonStartRewind.Size = new System.Drawing.Size(122, 23);
+            this.ButtonStartRewind.TabIndex = 11;
+            this.ButtonStartRewind.Text = "Start Rewind";
+            this.ButtonStartRewind.UseVisualStyleBackColor = true;
+            this.ButtonStartRewind.Click += new System.EventHandler(this.ButtonStartRewind_Click);
             // 
             // CheckFilters
             // 
@@ -253,6 +281,16 @@
             this.TabSettings.Size = new System.Drawing.Size(254, 190);
             this.TabSettings.TabIndex = 4;
             this.TabSettings.Text = "Settings";
+            // 
+            // ButtonInput
+            // 
+            this.ButtonInput.Location = new System.Drawing.Point(6, 30);
+            this.ButtonInput.Name = "ButtonInput";
+            this.ButtonInput.Size = new System.Drawing.Size(110, 23);
+            this.ButtonInput.TabIndex = 18;
+            this.ButtonInput.Text = "Configure controls";
+            this.ButtonInput.UseVisualStyleBackColor = true;
+            this.ButtonInput.Click += new System.EventHandler(this.ButtonInput_Click);
             // 
             // CheckMute
             // 
@@ -371,15 +409,16 @@
             this.ButtonPPUView.UseVisualStyleBackColor = true;
             this.ButtonPPUView.Click += new System.EventHandler(this.ButtonPPUView_Click);
             // 
-            // ButtonInput
+            // CheckTrackHistory
             // 
-            this.ButtonInput.Location = new System.Drawing.Point(6, 30);
-            this.ButtonInput.Name = "ButtonInput";
-            this.ButtonInput.Size = new System.Drawing.Size(110, 23);
-            this.ButtonInput.TabIndex = 18;
-            this.ButtonInput.Text = "Configure controls";
-            this.ButtonInput.UseVisualStyleBackColor = true;
-            this.ButtonInput.Click += new System.EventHandler(this.ButtonInput_Click);
+            this.CheckTrackHistory.AutoSize = true;
+            this.CheckTrackHistory.Location = new System.Drawing.Point(166, 65);
+            this.CheckTrackHistory.Name = "CheckTrackHistory";
+            this.CheckTrackHistory.Size = new System.Drawing.Size(87, 17);
+            this.CheckTrackHistory.TabIndex = 13;
+            this.CheckTrackHistory.Text = "Track history";
+            this.CheckTrackHistory.UseVisualStyleBackColor = true;
+            this.CheckTrackHistory.CheckedChanged += new System.EventHandler(this.CheckTrackHistory_CheckedChanged);
             // 
             // MainForm
             // 
@@ -441,6 +480,9 @@
         private System.Windows.Forms.Button ButtonNametables;
         private System.Windows.Forms.CheckBox CheckMute;
         private System.Windows.Forms.Button ButtonInput;
+        private System.Windows.Forms.Button ButtonStartRewind;
+        private System.Windows.Forms.Button ButtonStopRewind;
+        private System.Windows.Forms.CheckBox CheckTrackHistory;
     }
 }
 

@@ -4,6 +4,7 @@ namespace LotusNES.Core
 {
     public class Controller
     {
+        public bool BlockInput { get; set; }
         private bool[] buttonStates;
         private int currentButton;
         private bool strobe;
@@ -15,16 +16,45 @@ namespace LotusNES.Core
 
         public void SetButton(ControllerButton button, bool state)
         {
-            buttonStates[(int)button] = state;
+            if (!BlockInput)
+            {
+                buttonStates[(int)button] = state;
+            }
         }
 
         public void SetButtons(bool[] states)
         {
-            if (states.Length != 8)
+            if (!BlockInput)
             {
-                throw new Exception("Invalid controller state array length");
+                if (states.Length != 8)
+                {
+                    throw new Exception("Invalid controller state array length");
+                }
+                buttonStates = states;
             }
-            buttonStates = states;
+        }
+
+        public byte GetInputByte()
+        {
+            byte result = 0;
+
+            for (int i = 0; i < 8; i++)
+            {
+                if (buttonStates[i])
+                {
+                    result |= (byte)(1 << i);
+                }
+            }
+
+            return result;
+        }
+
+        public void LoadInputByte(byte input)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                buttonStates[i] = (input & (1 << i)) != 0;
+            }
         }
 
         public void WriteControllerRegister(byte data)
