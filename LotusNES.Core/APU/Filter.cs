@@ -2,6 +2,7 @@
 
 namespace LotusNES.Core
 {
+    [Serializable]
     public abstract class Filter
     {
         protected float rc;
