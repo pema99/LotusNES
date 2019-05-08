@@ -2,6 +2,7 @@
 
 namespace LotusNES.Core
 {
+    [Serializable]
     public class HighPassFilter : Filter
     {
         public HighPassFilter(float cutoffFrequency, float sampleRate)
