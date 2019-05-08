@@ -182,7 +182,7 @@ namespace LotusNES.Core
                 //Fetch areas, beige tiles on timing diagram
                 if ((cycleRender || cyclePreFetch) && (scanlineRender || scanlinePreRender))
                 {
-                    tileShiftRegister >>= 4; //lower 16 bits are old tile, upper 16 are new
+                    tileShiftRegister >>= 4; //lower 32 bits are old tile, upper 32 are new
 
                     //Fetch types, each takes 2 cycles
                     int fetchNum = Cycle % 8;
