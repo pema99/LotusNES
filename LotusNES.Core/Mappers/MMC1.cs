@@ -42,7 +42,7 @@ namespace LotusNES.Core
             //0000 - 1FFF is CHR rom banks, 2
             if (address < 0x2000)
             {
-                return Emulator.GamePak.ReadCharROM(chrBankBase[address / 0x1000] + address % 0x1000);
+                return Emulator.GamePak.ReadCharROM((chrBankBase[address / 0x1000] + address % 0x1000) % Emulator.GamePak.CharROMLength);
             }
 
             //Program RAM, not bank switched
@@ -70,7 +70,7 @@ namespace LotusNES.Core
             //For PPU
             if (address < 0x2000)
             {
-                Emulator.GamePak.WriteCharRAM(chrBankBase[address / 0x1000] + address % 0x1000, data);
+                Emulator.GamePak.WriteCharRAM((chrBankBase[address / 0x1000] + address % 0x1000) % Emulator.GamePak.CharROMLength, data);
             }
 
             //Program RAM
