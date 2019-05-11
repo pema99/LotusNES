@@ -1,6 +1,6 @@
 # LotusNES [![Build status](https://ci.appveyor.com/api/projects/status/lo08xl6yt79ptva7?svg=true)](https://ci.appveyor.com/project/pema99/lotusnes/build/artifacts)
 ## What is this?
-This is a fairly feature complete NES emulator written in C# mainly as a learning project. I would estimate that it runs about 80-90% of the NES library. 
+This is a fairly feature complete NES emulator written in C# mainly as a learning project. I would estimate that it runs about 80% of the NES library with varying accuracy. 
 
 Here, have a screenshot:
 
