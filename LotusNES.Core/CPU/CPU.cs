@@ -48,7 +48,7 @@ namespace LotusNES.Core
             9, 8, 5, 8, 11, 11, 11, 11, 5, 2, 5, 2, 1, 1, 1, 1, //F
         };
 
-        private readonly int[] InstructionCycles = new int[256]
+        private readonly uint[] InstructionCycles = new uint[256]
         {
           //0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
             7, 6, 2, 8, 3, 3, 5, 5, 3, 2, 2, 2, 4, 4, 6, 6, //0
@@ -109,9 +109,9 @@ namespace LotusNES.Core
         private bool irqPending;
 
         //Emulation
-        public int Cycles { get; private set; }
+        public ulong Cycles { get; private set; }
         public bool Error { get; private set; }
-        private int idleCycles;
+        private ulong idleCycles;
         private byte opcode;     
 
         public CPU()
@@ -177,7 +177,7 @@ namespace LotusNES.Core
             Error = false;
         }
 
-        public int Step()
+        public ulong Step()
         {
             //Idle cycles force the cpu to idle, ppu can control this
             if (idleCycles > 0)
@@ -197,7 +197,7 @@ namespace LotusNES.Core
             }
 
             //Get cycles before instruction
-            int startCycles = Cycles;
+            ulong startCycles = Cycles;
 
             //Fetch opcode, increment PC
             opcode = Memory.Read(pc);
@@ -213,7 +213,7 @@ namespace LotusNES.Core
             return Cycles - startCycles;         
         }
 
-        public void Stall(int cycles)
+        public void Stall(ulong cycles)
         {
             idleCycles += cycles;
         }
@@ -460,7 +460,7 @@ namespace LotusNES.Core
         {
             pc++;
             PushStack16(pc);
-            PushStack((byte)(status | 0b110000));
+            PushStack((byte)(status | 0b10000));
 
             SetStatus(StatusInterruptDisable, true);
 

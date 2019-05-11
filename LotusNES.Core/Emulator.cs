@@ -220,15 +220,15 @@ namespace LotusNES.Core
             bool PreFrame = PPU.OddFrame;
             while (PreFrame == PPU.OddFrame)
             {
-                int ElapsedCycles = CPU.Step();
+                ulong ElapsedCycles = CPU.Step();
 
-                for (int i = 0; i < ElapsedCycles && !DisableAPU; i++)
+                for (uint i = 0; i < ElapsedCycles && !DisableAPU; i++)
                 {
                     APU.Step();
                 }
 
                 //3 PPU per CPU
-                for (int i = 0; i < ElapsedCycles * 3; i++)
+                for (uint i = 0; i < ElapsedCycles * 3; i++)
                 {
                     PPU.Step();
 
