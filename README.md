@@ -27,11 +27,13 @@ If you are on OSX or Linux you will need to run the emulator through Mono, but i
 ## Features
 - Supports most of the NES library
 - A GUI for interacting with the emulator
-- Pretty solid CPU and PPU emulation
+- Pretty solid CPU emulation
+- Decent PPU emulation
 - Pretty non-solid APU emulation
 - Some neat debugging tools
 - NetPlay, play with friends
 - Savestates
+- Rewinding
 - Configurable emulation speed with a turbo mode
 - Pausing
 - Configurable resolution and volume
@@ -40,10 +42,15 @@ If you are on OSX or Linux you will need to run the emulator through Mono, but i
 
 ## Controls
 A | Select
+
 S | Start
+
 Z | Button A
+
 X | Button B
+
 Arrow Keys | DPad, duh
+
 Gamepads are also supported.
 
 ## Why?
