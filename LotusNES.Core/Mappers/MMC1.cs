@@ -20,16 +20,19 @@ namespace LotusNES.Core
         private bool chrROMBankMode;
 
         //Base addresses
-        private int chrBank0Base;
-        private int chrBank1Base;
-        private int prgBank0Base;
-        private int prgBank1Base;
+        private int[] chrBankBase;
+        private int[] prgBankBase;
 
         public MMC1()
-            : base(VRAMMirroringMode.Horizontal)
+            : base(Emulator.GamePak.VerticalVRAMMirroring ? VRAMMirroringMode.Vertical : VRAMMirroringMode.Horizontal)
         {
-            this.shiftRegister = 0x0C;
-            this.prgBank1Base = (Emulator.GamePak.ProgramROMBanks - 1) * 0x4000;
+            this.shiftRegister = 0x10;
+
+            this.prgBankBase = new int[2];
+            this.chrBankBase = new int[2];
+
+            this.prgBankBase[1] = (Emulator.GamePak.ProgramROMBanks - 1) * 0x4000;
+
             this.chrROMBankMode = false;
             this.prgROMBankMode = 3;
         }
@@ -39,16 +42,7 @@ namespace LotusNES.Core
             //0000 - 1FFF is CHR rom banks, 2
             if (address < 0x2000)
             {
-                //0000 - 0FFF is chr bank 0
-                if (address < 0x1000)
-                {
-                    return Emulator.GamePak.ReadCharROM((chrBank0Base + address) % 0x2000);
-                }
-                //1000 - 1FFF is 1
-                else
-                {
-                    return Emulator.GamePak.ReadCharROM((chrBank1Base + (address % 0x1000)) % 0x2000);
-                }
+                return Emulator.GamePak.ReadCharROM((chrBankBase[address / 0x1000] + address % 0x1000) % Emulator.GamePak.CharROMLength);
             }
 
             //Program RAM, not bank switched
@@ -61,17 +55,7 @@ namespace LotusNES.Core
             else if (address >= 0x8000)
             {
                 address -= 0x8000;
-
-                //8000 - BFFF is prg bank 0
-                if (address < 0x4000)
-                {
-                    return Emulator.GamePak.ReadProgramROM(prgBank0Base + address);
-                }
-                //C000 - FFFE is 1
-                else
-                {
-                    return Emulator.GamePak.ReadProgramROM(prgBank1Base + (address % 0x4000));
-                }
+                return Emulator.GamePak.ReadProgramROM(prgBankBase[address / 0x4000] + address % 0x4000);
             }
 
             //Open bus, apparently
@@ -86,19 +70,7 @@ namespace LotusNES.Core
             //For PPU
             if (address < 0x2000)
             {
-                if (Emulator.GamePak.UsesCharRAM)
-                {
-                    //0000 - 0FFF is chr bank 0
-                    if (address < 0x1000)
-                    {
-                        Emulator.GamePak.WriteCharRAM((chrBank0Base + address) % 0x2000, data);
-                    }
-                    //1000 - 1FFF is 1
-                    else
-                    {
-                        Emulator.GamePak.WriteCharRAM((chrBank1Base + (address % 0x1000)) % 0x2000, data);
-                    }
-                }
+                Emulator.GamePak.WriteCharRAM((chrBankBase[address / 0x1000] + address % 0x1000) % Emulator.GamePak.CharROMLength, data);
             }
 
             //Program RAM
@@ -186,32 +158,32 @@ namespace LotusNES.Core
             //Seperate 4k banks
             if (chrROMBankMode)
             {
-                chrBank0Base = chrBank0Register * 0x1000;
-                chrBank1Base = chrBank1Register * 0x1000;
+                chrBankBase[0] = chrBank0Register * 0x1000;
+                chrBankBase[1] = chrBank1Register * 0x1000;
             }
             //One 8k bank, lsb ignored
             else
             {
-                chrBank0Base = ((chrBank0Register & 0b11110) >> 1) * 0x1000;
-                chrBank1Base = chrBank0Base + 0x1000;
+                chrBankBase[0] = ((chrBank0Register & 0b11110) >> 1) * 0x1000;
+                chrBankBase[1] = chrBankBase[0] + 0x1000;
             }
 
             switch (prgROMBankMode)
             {
                 case 0:
                 case 1: //Switch 32k bank at 8000, ignore lsb
-                    prgBank0Base = ((prgBankRegister & 0b1110) >> 1) * 0x4000;
-                    prgBank1Base = prgBank0Base + 0x4000;
+                    prgBankBase[0] = ((prgBankRegister & 0b1110) >> 1) * 0x4000;
+                    prgBankBase[1] = prgBankBase[0] + 0x4000;
                     break;
 
                 case 2: //Switch 16k upper bank, fix lower at 8000
-                    prgBank0Base = 0;
-                    prgBank1Base = (prgBankRegister & 0b1111) * 0x4000;
+                    prgBankBase[0] = 0;
+                    prgBankBase[1] = (prgBankRegister & 0b1111) * 0x4000;
                     break;
                     
                 case 3: //Switch 16k lower bank, fix upper at C000
-                    prgBank0Base = (prgBankRegister & 0b1111) * 0x4000;
-                    prgBank1Base = (Emulator.GamePak.ProgramROMBanks - 1) * 0x4000; //Top bank
+                    prgBankBase[0] = (prgBankRegister & 0b1111) * 0x4000;
+                    prgBankBase[1] = (Emulator.GamePak.ProgramROMBanks - 1) * 0x4000; //Top bank
                     break;
             }
         }

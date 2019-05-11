@@ -53,6 +53,7 @@
     <Compile Include="CPU\CPU.cs" />
     <Compile Include="CPU\CPUMemory.cs" />
     <Compile Include="Emulator.cs" />
+    <Compile Include="EmulatorState.cs" />
     <Compile Include="IO\Controller.cs" />
     <Compile Include="IO\ControllerButton.cs" />
     <Compile Include="IO\GamePak.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Mappers\MMC3.cs" />
     <Compile Include="Mappers\NROM.cs" />
     <Compile Include="Mappers\UxROM.cs" />
+    <Compile Include="Misc\Compression.cs" />
     <Compile Include="Misc\GameGenie.cs" />
     <Compile Include="Misc\GameGenieCode.cs" />
     <Compile Include="Misc\VramMirroringMode.cs" />
@@ -72,6 +74,8 @@
     <Compile Include="PPU\PPU.cs" />
     <Compile Include="PPU\PPUMemory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rewinding\RewindBlock.cs" />
+    <Compile Include="Rewinding\RewindManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -62,8 +62,8 @@ namespace LotusNES.Core
         private bool frameCounterBlockIRQ;
 
         //State
-        private int cycles;
-        private int frameStep;
+        private ulong cycles;
+        private ulong frameStep;
 
         //Filters
         private Filter[] filterChain;
@@ -105,7 +105,7 @@ namespace LotusNES.Core
                 //  e e e e    e e e e -    Envelope and linear counter
                 if (frameCounterMode)
                 {
-                    int seq = frameStep % 5;
+                    ulong seq = frameStep % 5;
                     if (seq != 4)
                     {
                         ClockEnvelopes();
@@ -118,7 +118,7 @@ namespace LotusNES.Core
                 }
                 else
                 {
-                    int seq = frameStep % 4;
+                    ulong seq = frameStep % 4;
                     ClockEnvelopes();
                     if (seq == 1 || seq == 3)
                     {

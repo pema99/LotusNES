@@ -58,7 +58,7 @@ namespace LotusNES.Core
 
         //Memory
         public PPUMemory Memory { get; private set; }
-        public byte[] FrameBuffer { get; private set; }
+        public byte[] FrameBuffer { get; set; }
         private byte[] OAM;
         private byte[] scanlineOAM;
         private int[] spriteOrder;
@@ -182,7 +182,7 @@ namespace LotusNES.Core
                 //Fetch areas, beige tiles on timing diagram
                 if ((cycleRender || cyclePreFetch) && (scanlineRender || scanlinePreRender))
                 {
-                    tileShiftRegister >>= 4; //lower 16 bits are old tile, upper 16 are new
+                    tileShiftRegister >>= 4; //lower 32 bits are old tile, upper 32 are new
 
                     //Fetch types, each takes 2 cycles
                     int fetchNum = Cycle % 8;
@@ -397,11 +397,8 @@ namespace LotusNES.Core
                     //Combine to form color num
                     int colorNum = ((patternBitMS << 1) | patternBitLS) & 0b11;
 
-                    if (colorNum == 0)
-                    {
-                        continue; //Transparent, go to next sprite in line
-                    }
-                    else
+                    //If not transparent
+                    if (colorNum != 0)              
                     {
                         //Combine color num with palette num to form final pixel color
                         byte paletteNum = (byte)(scanlineOAM[sprIndex + 2] & 0b11);
@@ -676,19 +673,10 @@ namespace LotusNES.Core
             ushort cpuBaseAddress = (ushort)(data << 8);
 
             //Copy 256 bytes from CPU to OAM
-            int curOamAddr = oamAddr;
-            ushort curCpuAddress = cpuBaseAddress;
+            byte curOamAddr = oamAddr;
             for (int i = 0; i < 256; i++)
             {
-                if (curOamAddr >= 256)
-                {
-                    curOamAddr = 0;
-                }
-
-                OAM[curOamAddr] = Emulator.CPU.Memory.Read(curCpuAddress);
-
-                curOamAddr++;
-                curCpuAddress++;
+                OAM[curOamAddr++] = Emulator.CPU.Memory.Read(cpuBaseAddress++);
             }
             
             //According to nesdev OAMDMA takes 513 or 514 cycles, 514 on odd cpu cycle
@@ -740,9 +728,9 @@ namespace LotusNES.Core
             //https://wiki.nesdev.com/w/index.php/PPU_registers#The_PPUDATA_read_buffer_.28post-fetch.29
             if (ppuAddr < 0x3F00)
             {
-                byte Temp = ppuDataBuffer;
+                byte temp = ppuDataBuffer;
                 ppuDataBuffer = result;
-                result = Temp;
+                result = temp;
             }
             else
             {
