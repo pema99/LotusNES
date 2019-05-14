@@ -258,7 +258,7 @@ namespace LotusNES.Core
                 int relativeSprY = Scanline - sprY;
 
                 //If sprite top is on or before scanline AND the distance between sprite top and scanline is less than sprite height, draw
-                if (relativeSprY >= 0 && relativeSprY < sprHeight)
+                if (relativeSprY >= 0 && relativeSprY < sprHeight && sprY < 240)
                 {
                     if (scanlineSprites >= 8)
                     {
