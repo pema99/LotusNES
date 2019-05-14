@@ -117,7 +117,7 @@ namespace LotusNES.Core
             this.writeLatch = false;
             this.OddFrame = false;
 
-            this.Scanline = 241;
+            this.Scanline = 0;
             this.Cycle = 0;
         }
 

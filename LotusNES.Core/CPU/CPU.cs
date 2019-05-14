@@ -198,20 +198,17 @@ namespace LotusNES.Core
 
             //Get cycles before instruction
             ulong startCycles = Cycles;
-
+            
             //Fetch opcode, increment PC
             opcode = Memory.Read(pc);
             pc++;
-
-            if (opcode == 0x19)
-                ;
 
             //Decode and run opcode
             Instructions[opcode](AddressModes[InstructionAddressMode[opcode]](), InstructionAddressMode[opcode]);
             
             //Add cycles
             Cycles += InstructionCycles[opcode];
-
+            
             //Return cycles the instruction took
             return Cycles - startCycles;         
         }
@@ -437,6 +434,7 @@ namespace LotusNES.Core
         {
             if (GetStatus(StatusNegativeFlag))
             {
+                AddBranchCycles(address);
                 pc = address;
             }
         }
