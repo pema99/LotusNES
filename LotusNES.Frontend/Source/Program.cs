@@ -11,7 +11,7 @@ namespace LotusNES.Frontend
         public static MainViewport Viewport;
 
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             //Init emulator
             Emulator.Initialize();
@@ -23,12 +23,37 @@ namespace LotusNES.Frontend
                     MessageBoxIcon.Error);
             };
 
+            //Parse arguments
+            bool headless = false;
+            if (args.Length > 0)
+            {
+                int i = 0;
+                while (i < args.Length)
+                {
+                    switch (args[i])
+                    {
+                        case "-f":
+                            i++;
+                            Emulator.LoadROM(args[i]);
+                            break;
+
+                        case "-h":
+                            headless = true;
+                            break;
+                    }
+                    i++;
+                }
+            }
+
             //Init UI
-            Application.EnableVisualStyles();
-            Form = new MainForm();
-            Viewport = new MainViewport();
-            Form.Show();
-            Viewport.Run();
+            if (!headless)
+            {
+                Application.EnableVisualStyles();
+                Form = new MainForm();
+                Viewport = new MainViewport();
+                Form.Show();
+                Viewport.Run();
+            }
         }
     }
 }
