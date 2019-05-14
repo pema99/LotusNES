@@ -88,6 +88,7 @@ namespace LotusNES.Core
                     return new CNROM();
 
                 case 4:
+                case 206:
                     return new MMC3();
 
                 case 7:
