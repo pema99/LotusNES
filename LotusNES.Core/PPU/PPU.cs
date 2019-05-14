@@ -124,34 +124,6 @@ namespace LotusNES.Core
         //Steps exactly 1 cycle
         public void Step()
         {
-            //VBlank NMI
-            if (Scanline == 241 && Cycle == 1)
-            {
-                flagVBlank = true;
-                if (flagNMIEnable)
-                {
-                    Emulator.CPU.RequestNMI();
-                }
-            }
-
-            //If at last scanline
-            if (Scanline == 261)
-            {
-                //If at end of scanline (taking into account the skipped clock on odd frames when rendering is enabled)
-                if ((Rendering && OddFrame && Cycle == 339) || Cycle == 341)
-                {
-                    OddFrame = !OddFrame;
-                    Scanline = 0;
-                    Cycle = 0;
-                }
-            }
-            //Else increment scanlines normally and reset cycle count at end of each
-            else if (Cycle == 341)
-            {
-                Scanline++;
-                Cycle = 0;
-            }
-
             //Cycle and scanline intervals
             bool cycleRender =         Cycle >= 1    && Cycle <= 256;
             bool cyclePreFetch =       Cycle >= 321  && Cycle <= 336;
@@ -242,6 +214,34 @@ namespace LotusNES.Core
             }
 
             Cycle++;
+
+            //VBlank NMI
+            if (Scanline == 241 && Cycle == 1)
+            {
+                flagVBlank = true;
+                if (flagNMIEnable)
+                {
+                    Emulator.CPU.RequestNMI();
+                }
+            }
+
+            //If at last scanline
+            if (Scanline == 261)
+            {
+                //If at end of scanline (taking into account the skipped clock on odd frames when rendering is enabled)
+                if ((Rendering && OddFrame && Cycle == 339) || Cycle == 341)
+                {
+                    OddFrame = !OddFrame;
+                    Scanline = 0;
+                    Cycle = 0;
+                }
+            }
+            //Else increment scanlines normally and reset cycle count at end of each
+            else if (Cycle == 341)
+            {
+                Scanline++;
+                Cycle = 0;
+            }
         }
 
         private void SpriteEvaluation()
