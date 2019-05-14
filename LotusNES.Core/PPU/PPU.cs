@@ -63,6 +63,8 @@ namespace LotusNES.Core
         private byte[] scanlineOAM;
         private int[] spriteOrder;
 
+        private bool vBlankSuppress;
+
         //Properties
         private int coarseX
         {
@@ -131,12 +133,6 @@ namespace LotusNES.Core
             bool scanlinePostRender =  Scanline == 240;
             bool scanlineVBlank =      Scanline >= 241;
             bool scanlinePreRender =   Scanline == 261;
-
-            //Clear PPUSTATUS at 261, 1
-            if (scanlinePreRender && Cycle == 1)
-            {
-                SetPPUSTATUS(0);
-            }
 
             if (Rendering)
             {
@@ -213,12 +209,33 @@ namespace LotusNES.Core
                 }
             }
 
+            //Add cycle
             Cycle++;
 
-            //VBlank NMI
-            if (Scanline == 241 && Cycle == 1)
+            //Delay vblank by 1 ppu cycle
+            if (vBlankSuppress)
+            {
+                vBlankSuppress = false;
+            }
+
+            //Clear PPUSTATUS at 261, 1.
+            if (scanlinePreRender)
+            {
+                if (Cycle == 1)
+                {
+                    flagSprite0Hit = false;
+                    flagSpriteOverflow = false;
+                }
+                else if (Cycle == 2) //Emulate 1 cycle delay for clearing vblank
+                {
+                    flagVBlank = false;
+                }
+            }
+            //Set vblank and emit nmi at 241, 1
+            else if (Scanline == 241 && Cycle == 1)
             {
                 flagVBlank = true;
+                vBlankSuppress = true;
                 if (flagNMIEnable)
                 {
                     Emulator.CPU.RequestNMI();
@@ -226,7 +243,7 @@ namespace LotusNES.Core
             }
 
             //If at last scanline
-            if (Scanline == 261)
+            if (scanlinePreRender)
             {
                 //If at end of scanline (taking into account the skipped clock on odd frames when rendering is enabled)
                 if ((Rendering && OddFrame && Cycle == 339) || Cycle == 341)
@@ -236,6 +253,7 @@ namespace LotusNES.Core
                     Cycle = 0;
                 }
             }
+
             //Else increment scanlines normally and reset cycle count at end of each
             else if (Cycle == 341)
             {
@@ -707,10 +725,17 @@ namespace LotusNES.Core
         private byte GetPPUSTATUS()
         {
             //flagVBlank = true; - For testing
-            byte result = (byte)((flagVBlank          ? 0b10000000 : 0) +
-                                 (flagSprite0Hit      ? 0b01000000 : 0) +
+            byte result = (byte)((flagSprite0Hit      ? 0b01000000 : 0) +
                                  (flagSpriteOverflow  ? 0b00100000 : 0) +
                                  (lastRegisterData    & 0b00011111));
+
+            if (!vBlankSuppress)
+            {
+                if (flagVBlank)
+                {
+                    result |= 0x80;
+                }
+            }
 
             flagVBlank = false; //Cleared on read
             writeLatch = false; //Ditto
