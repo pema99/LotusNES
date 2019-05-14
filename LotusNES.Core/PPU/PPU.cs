@@ -211,15 +211,18 @@ namespace LotusNES.Core
                 }
             }
 
-            //Add cycle
-            Cycle++;
+            AdvanceCycle();
+        }
 
+        private void AdvanceCycle()
+        {
             //Delay vblank by 1 ppu cycle
             if (vBlankSuppress)
             {
                 vBlankSuppress = false;
             }
 
+            //Count down and fire nmi
             if (nmiDelay > 0)
             {
                 nmiDelay--;
@@ -230,21 +233,13 @@ namespace LotusNES.Core
             }
 
             //Clear PPUSTATUS at 261, 1.
-            if (scanlinePreRender)
+            if (Scanline == 261 && Cycle == 1)
             {
-                if (Cycle == 1)
-                {
-                    flagSprite0Hit = false;
-                    flagSpriteOverflow = false;
-                }
-                else if (Cycle == 2) //Emulate 1 cycle delay for clearing vblank
-                {
-                    flagVBlank = false;
-                }
+                SetPPUSTATUS(0);
             }
 
             //Set vblank and emit nmi at 241, 1
-            else if (Scanline == 241 && Cycle == 1)
+            else if (Scanline == 241 && Cycle == 0)
             {
                 flagVBlank = true;
                 vBlankSuppress = true;
@@ -255,23 +250,26 @@ namespace LotusNES.Core
             }
 
             //If at last scanline
-            if (scanlinePreRender)
+            else if (Scanline == 261)
             {
                 //If at end of scanline (taking into account the skipped clock on odd frames when rendering is enabled)
-                if ((Rendering && OddFrame && Cycle == 339) || Cycle == 341)
+                if ((Rendering && OddFrame && Cycle == 339) || Cycle == 340)
                 {
                     OddFrame = !OddFrame;
                     Scanline = 0;
-                    Cycle = 0;
+                    Cycle = -1; //-1 because we increment cycles immediately
                 }
             }
 
             //Else increment scanlines normally and reset cycle count at end of each
-            else if (Cycle == 341)
+            else if (Cycle == 340)
             {
                 Scanline++;
-                Cycle = 0;
+                Cycle = -1; //-1 because we increment cycles immediately
             }
+
+            //Add cycle
+            Cycle++;
         }
 
         private void SpriteEvaluation()
