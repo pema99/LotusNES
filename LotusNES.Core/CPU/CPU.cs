@@ -203,6 +203,9 @@ namespace LotusNES.Core
             opcode = Memory.Read(pc);
             pc++;
 
+            if (opcode == 0x19)
+                ;
+
             //Decode and run opcode
             Instructions[opcode](AddressModes[InstructionAddressMode[opcode]](), InstructionAddressMode[opcode]);
             
@@ -338,7 +341,7 @@ namespace LotusNES.Core
         #region Utility Functions
         private bool PageCrossed(ushort from, ushort to)
         {
-            return (from & 0b11111111) != (to & 0b11111111);
+            return (from & 0b1111111100000000) != (to & 0b1111111100000000);
         }
 
         private void AddBranchCycles(ushort address)
@@ -994,23 +997,25 @@ namespace LotusNES.Core
 
         private ushort AddrAbsoluteX()
         {
-            ushort result = (ushort)(Memory.Read16(pc) + x);
+            ushort result = Memory.Read16(pc);
             pc += 2;
-            if (PageCrossed((ushort)(result - x), x) && InstructionPageCrossCycles[opcode])
+            if (PageCrossed((ushort)(result + x), result) && InstructionPageCrossCycles[opcode])
             {
                 Cycles++;
             }
+            result += x;
             return result;
         }
 
         private ushort AddrAbsoluteY()
         {
-            ushort result = (ushort)(Memory.Read16(pc) + y);
+            ushort result = Memory.Read16(pc);
             pc += 2;
-            if (PageCrossed((ushort)(result - y), y) && InstructionPageCrossCycles[opcode])
+            if (PageCrossed((ushort)(result + y), result) && InstructionPageCrossCycles[opcode])
             {
                 Cycles++;
             }
+            result += y;
             return result;
         }
 
