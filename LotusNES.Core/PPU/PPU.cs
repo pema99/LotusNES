@@ -281,7 +281,7 @@ namespace LotusNES.Core
         {
             // Get pixel data (4 bits of tile shift register as specified by x)
             byte backgroundPixel = GetBackgroundPixel();
-            (byte spritePixel, int SpriteIndex) = GetSpritePixel();
+            (byte spritePixel, int spriteIndex) = GetSpritePixel();
             int backgroundColorNum = backgroundPixel & 0b11;
             int spriteColorNum = spritePixel & 0b11;
 
@@ -306,13 +306,15 @@ namespace LotusNES.Core
                 else //BG opaque, sprite Opaque, choose based on sprite priority bit
                 {
                     //Sprite - BG collision
-                    if (spriteOrder[SpriteIndex] == 0)
+                    if (spriteOrder[spriteIndex] == 0
+                        && Cycle - 1 != 255 
+                        && scanlineOAM[(spriteIndex * 4)] != 255)
                     {
                         flagSprite0Hit = true;
                     }
 
                     //If sprite priority it set, sprite is behind background
-                    if ((scanlineOAM[(SpriteIndex * 4) + 2] & 0b00100000) != 0)
+                    if ((scanlineOAM[(spriteIndex * 4) + 2] & 0b00100000) != 0)
                     {
                         pixelColor = GetPixelColor(backgroundPixel, false);
 
