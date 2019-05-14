@@ -605,11 +605,18 @@ namespace LotusNES.Core
             flagNameTableSelect = (byte)(data & 0b00000011);
 
             //Immidiately trigger nmi if in vblank and setting nmienable while it is already set
-            //Suppress nmi occurence if near vbl flag clear
+            //Suppress this nmi occurence if set near vblank flag clear
             if (flagNMIEnable && !prevNMIEnable && flagVBlank && 
                 (Scanline != 261 || Cycle < 1))                  
             {
                 nmiDelay = 15;  //Found experimentally
+            }
+
+            //Block upcoming nmi if nmi's are disabled while vblank flag was set recently
+            if (!flagNMIEnable && prevNMIEnable &&
+                (Scanline != 241 || Cycle < 4))
+            {
+                nmiDelay = 0;
             }
 
             //Set cached values
@@ -751,6 +758,7 @@ namespace LotusNES.Core
                                  (flagSpriteOverflow  ? 0b00100000 : 0) +
                                  (lastRegisterData    & 0b00011111));
 
+            //Suppress first vblank read
             if (!vBlankSuppress)
             {
                 if (flagVBlank)
