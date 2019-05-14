@@ -64,6 +64,7 @@ namespace LotusNES.Core
         private int[] spriteOrder;
 
         private bool vBlankSuppress;
+        private int nmiDelay;
 
         //Properties
         private int coarseX
@@ -237,6 +238,15 @@ namespace LotusNES.Core
                 flagVBlank = true;
                 vBlankSuppress = true;
                 if (flagNMIEnable)
+                {
+                    nmiDelay = 16; //Found experimentally 
+                }
+            }
+
+            if (nmiDelay > 0)
+            {
+                nmiDelay--;
+                if (nmiDelay == 0)
                 {
                     Emulator.CPU.RequestNMI();
                 }
@@ -582,6 +592,8 @@ namespace LotusNES.Core
 
         private void SetPPUCTRL(byte data)
         {
+            bool prevNMIEnable = flagNMIEnable;
+
             flagNMIEnable =             (data & 0b10000000) > 0;
             flagPPUMasterSlave =        (data & 0b01000000) > 0;
             flagSpriteHeight =          (data & 0b00100000) > 0;
@@ -589,6 +601,11 @@ namespace LotusNES.Core
             flagSpriteTileSelect =      (data & 0b00001000) > 0;
             flagIncrementMode =         (data & 0b00000100) > 0;
             flagNameTableSelect = (byte)(data & 0b00000011);
+             
+            if (flagNMIEnable && !prevNMIEnable && flagVBlank)
+            {
+                nmiDelay = 16;  //Found experimentally
+            }
 
             //Set cached values
             baseNameTableAddress = (ushort)(0x2000 + 0x400 * flagNameTableSelect);
