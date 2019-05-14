@@ -63,6 +63,10 @@ namespace LotusNES.Core
         private byte[] scanlineOAM;
         private int[] spriteOrder;
 
+        //Edge cases timing variables
+        private bool vBlankSuppress; //Supress next read of vblank flag
+        private int nmiDelay; //Count down to nmi
+
         //Properties
         private int coarseX
         {
@@ -131,12 +135,6 @@ namespace LotusNES.Core
             bool scanlinePostRender =  Scanline == 240;
             bool scanlineVBlank =      Scanline >= 241;
             bool scanlinePreRender =   Scanline == 261;
-
-            //Clear PPUSTATUS at 261, 1
-            if (scanlinePreRender && Cycle == 1)
-            {
-                SetPPUSTATUS(0);
-            }
 
             if (Rendering)
             {
@@ -213,35 +211,65 @@ namespace LotusNES.Core
                 }
             }
 
-            Cycle++;
+            AdvanceCycle();
+        }
 
-            //VBlank NMI
-            if (Scanline == 241 && Cycle == 1)
+        private void AdvanceCycle()
+        {
+            //Delay vblank by 1 ppu cycle
+            if (vBlankSuppress)
             {
-                flagVBlank = true;
-                if (flagNMIEnable)
+                vBlankSuppress = false;
+            }
+
+            //Count down and fire nmi
+            if (nmiDelay > 0)
+            {
+                nmiDelay--;
+                if (nmiDelay == 0)
                 {
                     Emulator.CPU.RequestNMI();
                 }
             }
 
+            //Clear PPUSTATUS at 261, 1.
+            if (Scanline == 261 && Cycle == 1)
+            {
+                SetPPUSTATUS(0);
+            }
+
+            //Set vblank and emit nmi at 241, 1
+            else if (Scanline == 241 && Cycle == 0)
+            {
+                flagVBlank = true;
+                vBlankSuppress = true;
+                if (flagNMIEnable)
+                {
+                    nmiDelay = 15; //Found experimentally 
+                }
+            }
+
             //If at last scanline
-            if (Scanline == 261)
+            else if (Scanline == 261)
             {
                 //If at end of scanline (taking into account the skipped clock on odd frames when rendering is enabled)
-                if ((Rendering && OddFrame && Cycle == 339) || Cycle == 341)
+                if ((Rendering && OddFrame && Cycle == 339) || Cycle == 340)
                 {
                     OddFrame = !OddFrame;
                     Scanline = 0;
-                    Cycle = 0;
+                    Cycle = -1; //-1 because we increment cycles immediately
                 }
             }
+
             //Else increment scanlines normally and reset cycle count at end of each
-            else if (Cycle == 341)
+            else if (Cycle == 340)
             {
                 Scanline++;
-                Cycle = 0;
+                Cycle = -1; //-1 because we increment cycles immediately
             }
+
+            //Add cycle
+            Cycle++;
         }
 
         private void SpriteEvaluation()
@@ -564,13 +592,30 @@ namespace LotusNES.Core
 
         private void SetPPUCTRL(byte data)
         {
-            flagNMIEnable =             (data & 0b10000000) > 0;
-            flagPPUMasterSlave =        (data & 0b01000000) > 0;
-            flagSpriteHeight =          (data & 0b00100000) > 0;
-            flagBackgroundTileSelect =  (data & 0b00010000) > 0;
-            flagSpriteTileSelect =      (data & 0b00001000) > 0;
-            flagIncrementMode =         (data & 0b00000100) > 0;
+            bool prevNMIEnable = flagNMIEnable;
+
+            flagNMIEnable =             (data & 0b10000000) != 0;
+            flagPPUMasterSlave =        (data & 0b01000000) != 0;
+            flagSpriteHeight =          (data & 0b00100000) != 0;
+            flagBackgroundTileSelect =  (data & 0b00010000) != 0;
+            flagSpriteTileSelect =      (data & 0b00001000) != 0;
+            flagIncrementMode =         (data & 0b00000100) != 0;
             flagNameTableSelect = (byte)(data & 0b00000011);
+
+            //Immidiately trigger nmi if in vblank and setting nmienable while it is already set
+            //Suppress this nmi occurence if set near vblank flag clear
+            if (flagNMIEnable && !prevNMIEnable && flagVBlank && 
+                (Scanline != 261 || Cycle < 1))                  
+            {
+                nmiDelay = 15;  //Found experimentally
+            }
+
+            //Block upcoming nmi if nmi's are disabled while vblank flag was set recently
+            if (!flagNMIEnable && prevNMIEnable &&
+                (Scanline != 241 || Cycle < 4))
+            {
+                nmiDelay = 0;
+            }
 
             //Set cached values
             baseNameTableAddress = (ushort)(0x2000 + 0x400 * flagNameTableSelect);
@@ -707,10 +752,24 @@ namespace LotusNES.Core
         private byte GetPPUSTATUS()
         {
             //flagVBlank = true; - For testing
-            byte result = (byte)((flagVBlank          ? 0b10000000 : 0) +
-                                 (flagSprite0Hit      ? 0b01000000 : 0) +
+            byte result = (byte)((flagSprite0Hit      ? 0b01000000 : 0) +
                                  (flagSpriteOverflow  ? 0b00100000 : 0) +
                                  (lastRegisterData    & 0b00011111));
+
+            //Suppress first vblank read
+            if (!vBlankSuppress)
+            {
+                if (flagVBlank)
+                {
+                    result |= 0x80;
+                }
+            }
+
+            //06-suppression, found experimentally
+            if (nmiDelay > 12)
+            {
+                nmiDelay = 0;
+            }
 
             flagVBlank = false; //Cleared on read
             writeLatch = false; //Ditto
