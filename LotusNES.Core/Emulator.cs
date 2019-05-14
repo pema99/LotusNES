@@ -248,6 +248,7 @@ namespace LotusNES.Core
                 {
                     ReadStateFromStream(FS);
                 }
+                RewindManager.Reset();
             }
 
             else if (queueSaveState)
@@ -268,6 +269,7 @@ namespace LotusNES.Core
                 CPU.Reset();
                 PPU.Reset();
                 APU.Reset();
+                RewindManager.Reset();
 
                 State = EmulatorState.Running;
             }

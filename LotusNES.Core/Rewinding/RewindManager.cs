@@ -21,6 +21,11 @@ namespace LotusNES.Core
             blocks = new Stack<RewindBlock>();
         }
 
+        public void Reset()
+        {
+            blocks.Clear();
+        }
+
         //call this on end of vblank, frame start
         public void PushFrame(byte[] input, byte[] frame)
         {
