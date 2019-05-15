@@ -164,7 +164,7 @@ namespace LotusNES.Core
             //One 8k bank, lsb ignored
             else
             {
-                chrBankBase[0] = ((chrBank0Register & 0b11110) >> 1) * 0x1000;
+                chrBankBase[0] = (chrBank0Register & 0b11111110) * 0x1000;
                 chrBankBase[1] = chrBankBase[0] + 0x1000;
             }
 
