@@ -100,8 +100,18 @@ namespace LotusNES.Core
 
         public override void Step()
         {
-            //  When PPU rendering        Count visible scanlines        At a certain cycle each scanline (tweaked for Double Dragon 2)
-            if (Emulator.PPU.Rendering && Emulator.PPU.Scanline < 240 && Emulator.PPU.Cycle == 320)
+            //When using 8x8 sprites, if the BG uses $0000, and the sprites use $1000, the IRQ counter should decrement on PPU cycle 260.
+            //When using 8x8 sprites, if the BG uses $1000, and the sprites use $0000, the IRQ counter should decrement on PPU cycle 324.
+            //TODO: When using 8x16 sprites PPU A12 must be explicitly tracked. 
+            byte ppuctrl = Emulator.PPU.GetRegister(0x2000);
+            bool bg = (ppuctrl & 0b00010000) != 0;
+            bool sprite = (ppuctrl & 0b00001000) != 0;
+
+            //Currently dont handle 8x16 sprites, default to 260
+            int irqCycle = (bg && !sprite) ? 324 : 260;
+
+            //  When PPU rendering        Count visible scanlines        At a specific cycle
+            if (Emulator.PPU.Rendering && Emulator.PPU.Scanline < 240 && Emulator.PPU.Cycle == irqCycle)
             {
                 if (irqCounter == 0) //Reload counter
                 {
