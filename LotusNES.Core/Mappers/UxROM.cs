@@ -51,7 +51,8 @@ namespace LotusNES.Core
             //8000 - FFFF bank select
             if (address >= 0x8000)
             {
-                prgBankBase = (data & 0b111) * 0x4000;
+                int mask = Emulator.GamePak.MapperID == 71 ? 0b1111 : 0b111;
+                prgBankBase = (data & mask) * 0x4000 % Emulator.GamePak.ProgramROMLength;
             }
         }
     }
