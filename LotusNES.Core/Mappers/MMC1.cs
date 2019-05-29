@@ -183,7 +183,7 @@ namespace LotusNES.Core
                     
                 case 3: //Switch 16k lower bank, fix upper at C000
                     prgBankBase[0] = (prgBankRegister & 0b1111) * 0x4000;
-                    prgBankBase[1] = (Emulator.GamePak.ProgramROMBanks - 1) * 0x4000; //Top bank
+                    prgBankBase[1] = (Math.Min(16, Emulator.GamePak.ProgramROMBanks) - 1) * 0x4000; //Top bank
                     break;
             }
         }
