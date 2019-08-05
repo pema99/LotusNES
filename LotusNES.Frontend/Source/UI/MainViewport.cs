@@ -86,6 +86,17 @@ namespace LotusNES.Frontend
                 KeyboardState KB = Keyboard.GetState();
                 HandleInput(KB, 0);
                 HandleInput(KB, 1);
+                if (Emulator.UseZapper)
+                {
+                    MouseState MS = Mouse.GetState();
+                    if (GraphicsDevice.Viewport.Bounds.Contains(MS.Position))
+                    {
+                        int scaledX = MS.X / screenScale;
+                        int scaledY = MS.Y / screenScale;
+                        Color lightness = PaletteMap.MapXNA(Emulator.PPU.FrameBuffer[scaledY * 256 + scaledX]);
+                        Emulator.Zapper.SetState(MS.LeftButton == ButtonState.Pressed, lightness.R > 230 && lightness.G > 230 && lightness.B > 230);
+                    }
+                }
 
                 //Draw frame
                 for (int i = 0; i < screenWidth * screenHeight; i++)

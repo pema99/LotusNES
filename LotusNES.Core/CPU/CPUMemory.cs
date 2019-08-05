@@ -38,7 +38,14 @@ namespace LotusNES.Core
                 }
                 else if (address == 0x4017)
                 {
-                    result = Emulator.Controllers[1].ReadControllerRegister();
+                    if (Emulator.UseZapper)
+                    {
+                        result = Emulator.Zapper.ReadControllerRegister();
+                    }
+                    else
+                    {
+                        result = Emulator.Controllers[1].ReadControllerRegister();
+                    }
                 }
                 else if (address == 0x4015)
                 {

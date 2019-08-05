@@ -16,6 +16,7 @@ namespace LotusNES.Core
         public static GamePak GamePak { get; private set; }
         public static Mapper Mapper { get; private set; }
         public static Controller[] Controllers { get; private set; }
+        public static Zapper Zapper { get; private set; }
 
         public static NetPlayServer NetPlayServer { get; private set; }
         public static GameGenie GameGenie { get; private set; }
@@ -29,6 +30,7 @@ namespace LotusNES.Core
         public static bool Pause { get; set; }
         public static bool DisableAPU { get; set; }
         public static bool TrackHistory { get; set; }
+        public static bool UseZapper { get; set; }
 
         //State
         public static EmulatorState State { get; private set; }
@@ -51,6 +53,7 @@ namespace LotusNES.Core
             Pause = false;
             DisableAPU = false;
             TrackHistory = false;
+            UseZapper = true;
 
             State = EmulatorState.Halted;
             queueLoad = false;
@@ -64,6 +67,7 @@ namespace LotusNES.Core
             PPU = new PPU();
             APU = new APU();
             Controllers = new Controller[] { new Controller(), new Controller() };
+            Zapper = new Zapper();
 
             NetPlayServer = new NetPlayServer();
             GameGenie = new GameGenie();

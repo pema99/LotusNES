@@ -58,6 +58,7 @@
     <Compile Include="IO\ControllerButton.cs" />
     <Compile Include="IO\GamePak.cs" />
     <Compile Include="IO\MemoryMap.cs" />
+    <Compile Include="IO\Zapper.cs" />
     <Compile Include="Mappers\AxROM.cs" />
     <Compile Include="Mappers\CNROM.cs" />
     <Compile Include="Mappers\GxROM.cs" />
