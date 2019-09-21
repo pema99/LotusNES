@@ -5,7 +5,7 @@ using System.Net.Sockets;
 
 namespace LotusNES.Core
 {
-    public class NetPlayServer
+    public class NetPlayServer : Component
     {
         private TcpListener host;
         private TcpClient peer;
@@ -13,7 +13,8 @@ namespace LotusNES.Core
 
         public bool Running { get; private set; }
 
-        public NetPlayServer()
+        public NetPlayServer(Emulator emu)
+            : base(emu)
         {
             this.Running = false;
         }
@@ -61,7 +62,7 @@ namespace LotusNES.Core
             {
                 using (GZipStream compressStream = new GZipStream(dataStream, CompressionMode.Compress))
                 {
-                    compressStream.Write(Emulator.PPU.FrameBuffer, 0, Emulator.PPU.FrameBuffer.Length);
+                    compressStream.Write(emu.PPU.FrameBuffer, 0, emu.PPU.FrameBuffer.Length);
                     compressStream.Flush();
                 }
 

@@ -6,14 +6,21 @@ namespace LotusNES.Frontend
 {
     public partial class MainForm : DoubleBufferedForm
     {
-        private GameGenieForm gameGenieForm = new GameGenieForm();
-        private PPUViewForm ppuViewForm = new PPUViewForm();
-        private NameTableForm nameTableForm = new NameTableForm();
+        private GameGenieForm gameGenieForm;
+        private PPUViewForm ppuViewForm;
+        private NameTableForm nameTableForm;
 
-        private InputForm inputForm = new InputForm();
+        private InputForm inputForm;
 
-        public MainForm()
+        public MainForm(Emulator emu)
+            : base(emu)
         {
+            gameGenieForm = new GameGenieForm(emu);
+            ppuViewForm = new PPUViewForm(emu);
+            nameTableForm = new NameTableForm(emu);
+
+            inputForm = new InputForm(emu);
+
             InitializeComponent();
         }
 
@@ -34,32 +41,32 @@ namespace LotusNES.Frontend
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
         {
-            LabelStatus.Text = Emulator.CPU.DebugString();
+            LabelStatus.Text = emu.CPU.DebugString();
         }
 
         private void CheckPause_CheckedChanged(object sender, EventArgs e)
         {
             CheckPause.Text = CheckPause.Checked ? "Unpause" : "Pause";
-            Emulator.Pause = CheckPause.Checked;
+            emu.Pause = CheckPause.Checked;
         }
 
         private void CheckTurbo_CheckedChanged(object sender, EventArgs e)
         {
             CheckTurbo.Text = CheckTurbo.Checked ? "No fast :(" : "Maximum Overdrive";
-            Emulator.Turbo = CheckTurbo.Checked;
+            emu.Turbo = CheckTurbo.Checked;
             SliderSpeed.Enabled = !CheckTurbo.Checked;
         }
 
         private void ButtonNetPlay_Click(object sender, EventArgs e)
         {
-            if (Emulator.NetPlayServer.Running)
+            if (emu.NetPlayServer.Running)
             {
-                Emulator.NetPlayServer.Stop();
+                emu.NetPlayServer.Stop();
                 ButtonNetPlay.Text = "Start NetPlay";
             }
             else
             {
-                Emulator.NetPlayServer.Start((int)NumberPort.Value);
+                emu.NetPlayServer.Start((int)NumberPort.Value);
                 ButtonNetPlay.Text = "Stop NetPlay";
             }
         }
@@ -71,7 +78,7 @@ namespace LotusNES.Frontend
 
             if (OFD.ShowDialog() == DialogResult.OK)
             {
-                Emulator.LoadROM(OFD.FileName);
+                emu.LoadROM(OFD.FileName);
                 nameTableForm.UpdateMirroring = true;
             }      
         }
@@ -90,12 +97,12 @@ namespace LotusNES.Frontend
         private void SliderSpeed_Scroll(object sender, EventArgs e)
         {
             LabelSpeed.Text = string.Format("Emulation speed {0}%", SliderSpeed.Value * 25);
-            Emulator.Speed = SliderSpeed.Value * 0.25;
+            emu.Speed = SliderSpeed.Value * 0.25;
         }
 
         private void SliderVolume_Scroll(object sender, EventArgs e)
         {
-            Emulator.DisableAPU = SliderVolume.Value == 0;
+            emu.DisableAPU = SliderVolume.Value == 0;
             Program.Viewport.SetVolume(SliderVolume.Value / 100f);
             LabelVolume.Text = string.Format("Sound volume {0}%", SliderVolume.Value);
         }
@@ -107,7 +114,7 @@ namespace LotusNES.Frontend
 
             if (SFD.ShowDialog() == DialogResult.OK)
             {
-                Emulator.SaveStateToFile(SFD.FileName);
+                emu.SaveStateToFile(SFD.FileName);
             }
         }
 
@@ -118,14 +125,14 @@ namespace LotusNES.Frontend
 
             if (OFD.ShowDialog() == DialogResult.OK)
             {
-                Emulator.LoadStateFromFile(OFD.FileName);
+                emu.LoadStateFromFile(OFD.FileName);
             }
         }
 
         private void CheckFilters_CheckedChanged(object sender, EventArgs e)
         {
             CheckFilters.Text = CheckFilters.Checked ? "Disable APU filter chain" : "Enable APU filter chain";
-            Emulator.APU.EnableFilters = CheckFilters.Checked;
+            emu.APU.EnableFilters = CheckFilters.Checked;
         }
 
         private void ButtonGameGenie_Click(object sender, EventArgs e)
@@ -169,13 +176,13 @@ namespace LotusNES.Frontend
             if (CheckMute.Checked)
             {
                 CheckMute.Text = "Enable APU (may lower performance)";
-                Emulator.DisableAPU = true;
+                emu.DisableAPU = true;
                 SliderVolume.Enabled = false;
             }
             else
             {
                 CheckMute.Text = "Disable APU (may improve performance)";
-                Emulator.DisableAPU = SliderVolume.Value == 0;
+                emu.DisableAPU = SliderVolume.Value == 0;
                 SliderVolume.Enabled = true;
             }
         }
@@ -194,21 +201,21 @@ namespace LotusNES.Frontend
 
         private void ButtonStartRewind_Click(object sender, EventArgs e)
         {
-            Emulator.StartRewinding();
+            emu.StartRewinding();
         }
 
         private void ButtonStopRewind_Click(object sender, EventArgs e)
         {
-            Emulator.StopRewinding();
+            emu.StopRewinding();
         }
 
         private void CheckTrackHistory_CheckedChanged(object sender, EventArgs e)
         {
-            Emulator.TrackHistory = CheckTrackHistory.Checked;
+            emu.TrackHistory = CheckTrackHistory.Checked;
             ButtonStopRewind.Enabled = ButtonStartRewind.Enabled = CheckTrackHistory.Checked;
             if (!CheckTrackHistory.Checked)
             {
-                Emulator.StopRewinding();
+                emu.StopRewinding();
             }
         }
     }

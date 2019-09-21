@@ -4,7 +4,7 @@ using System.IO;
 
 namespace LotusNES.Core
 {
-    public class RewindManager
+    public class RewindManager : Component
     {
         private Stack<RewindBlock> blocks;
 
@@ -16,7 +16,8 @@ namespace LotusNES.Core
             }
         }
 
-        public RewindManager()
+        public RewindManager(Emulator emu)
+            : base(emu)
         {
             blocks = new Stack<RewindBlock>();
         }
@@ -33,7 +34,7 @@ namespace LotusNES.Core
             {
                 using (MemoryStream ms = new MemoryStream())
                 {
-                    Emulator.WriteStateToStream(ms);
+                    emu.WriteStateToStream(ms);
                     blocks.Push(new RewindBlock(ms.ToArray()));
                 }
             }
@@ -51,7 +52,7 @@ namespace LotusNES.Core
                 blocks.Pop();
                 using (MemoryStream ms = new MemoryStream(blocks.Peek().SaveState))
                 {
-                    Emulator.ReadStateFromStream(ms);
+                    emu.ReadStateFromStream(ms);
                 }                
             }
             return (frame.input, Compression.Decompress(frame.frame, 240 * 256), false);

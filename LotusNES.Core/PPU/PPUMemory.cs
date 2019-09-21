@@ -8,7 +8,8 @@ namespace LotusNES.Core
         private byte[] VRAM;
         private byte[] paletteRAM;
 
-        public PPUMemory()
+        public PPUMemory(Emulator emu)
+            : base(emu)
         {
             this.VRAM = new byte[2048];
             this.paletteRAM = new byte[32];
@@ -19,7 +20,7 @@ namespace LotusNES.Core
             //2k char rom, pattern tables, between 0 - 0x2000
             if (address < 0x2000)
             {
-                return Emulator.Mapper.Read(address);
+                return emu.Mapper.Read(address);
             }
 
             //Next comes 2k VRAM, mirrored until 0x3F00
@@ -45,7 +46,7 @@ namespace LotusNES.Core
             //2k char rom, pattern tables, between 0 - 0x2000
             if (address < 0x2000)
             {
-                Emulator.Mapper.Write(address, data);
+                emu.Mapper.Write(address, data);
             }
 
             //Next comes 2k VRAM, nametables, mirrored until 0x3F00
@@ -64,14 +65,14 @@ namespace LotusNES.Core
         private int HandleVRAMMirroring(ushort address)
         {
             int vramIndex = (address - 0x2000) % 0x1000;
-            if (Emulator.Mapper.VRAMMirroring == VRAMMirroringMode.Vertical)
+            if (emu.Mapper.VRAMMirroring == VRAMMirroringMode.Vertical)
             {
                 if (vramIndex >= 0x800)
                 {
                     vramIndex -= 0x800;
                 }
             }
-            else if (Emulator.Mapper.VRAMMirroring == VRAMMirroringMode.Horizontal)
+            else if (emu.Mapper.VRAMMirroring == VRAMMirroringMode.Horizontal)
             {
                 if (vramIndex > 0x800)
                 {
@@ -83,11 +84,11 @@ namespace LotusNES.Core
                     vramIndex %= 0x400;
                 }
             }
-            else if (Emulator.Mapper.VRAMMirroring == VRAMMirroringMode.SingleScreenLower)
+            else if (emu.Mapper.VRAMMirroring == VRAMMirroringMode.SingleScreenLower)
             {
                 vramIndex %= 0x400;
             }
-            else if (Emulator.Mapper.VRAMMirroring == VRAMMirroringMode.SingleScreenUpper)
+            else if (emu.Mapper.VRAMMirroring == VRAMMirroringMode.SingleScreenUpper)
             {
                 vramIndex %= 0x400;
                 vramIndex += 0x400;

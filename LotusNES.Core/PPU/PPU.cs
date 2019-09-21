@@ -3,7 +3,7 @@
 namespace LotusNES.Core
 {
     [Serializable]
-    public class PPU
+    public class PPU : Component
     {
         //PPUCTRL register
         private bool flagNMIEnable;
@@ -102,9 +102,12 @@ namespace LotusNES.Core
 
         public bool OddFrame { get; private set; } //Even or odd frame
 
+        public PPU(Emulator emu)
+            : base(emu) { }
+
         public void Reset()
         {
-            this.Memory = new PPUMemory();
+            this.Memory = new PPUMemory(emu);
             this.OAM = new byte[256]; //64 sprites
             this.scanlineOAM = new byte[32]; //8 sprites
             this.spriteOrder = new int[8]; //Index of each scanline sprite in OAM
@@ -228,7 +231,7 @@ namespace LotusNES.Core
                 nmiDelay--;
                 if (nmiDelay == 0)
                 {
-                    Emulator.CPU.RequestNMI();
+                    emu.CPU.RequestNMI();
                 }
             }
 
@@ -723,17 +726,17 @@ namespace LotusNES.Core
             byte curOamAddr = oamAddr;
             for (int i = 0; i < 256; i++)
             {
-                OAM[curOamAddr++] = Emulator.CPU.Memory.Read(cpuBaseAddress++);
+                OAM[curOamAddr++] = emu.CPU.Memory.Read(cpuBaseAddress++);
             }
             
             //According to nesdev OAMDMA takes 513 or 514 cycles, 514 on odd cpu cycle
-            if (Emulator.CPU.Cycles % 2 == 1)
+            if (emu.CPU.Cycles % 2 == 1)
             {
-                Emulator.CPU.Stall(514);
+                emu.CPU.Stall(514);
             }
             else
             {
-                Emulator.CPU.Stall(513);
+                emu.CPU.Stall(513);
             }
         }
 

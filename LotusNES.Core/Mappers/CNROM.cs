@@ -7,8 +7,8 @@ namespace LotusNES.Core
     {
         private int chrBankBase;
 
-        public CNROM()
-            : base(Emulator.GamePak.VerticalVRAMMirroring ? VRAMMirroringMode.Vertical : VRAMMirroringMode.Horizontal)
+        public CNROM(Emulator emu)
+            : base(emu, emu.GamePak.VerticalVRAMMirroring ? VRAMMirroringMode.Vertical : VRAMMirroringMode.Horizontal)
         {
         }
 
@@ -17,14 +17,14 @@ namespace LotusNES.Core
             //0000 - 1FFF bankswitched CHR rom
             if (address < 0x2000)
             {
-                return Emulator.GamePak.ReadCharROM(chrBankBase + address);
+                return emu.GamePak.ReadCharROM(chrBankBase + address);
             }
 
             //8000 - FFFF prg rom (16 or 32k)
             if (address >= 0x8000)
             {
                 address -= 0x8000;
-                return Emulator.GamePak.ReadProgramROM(address);
+                return emu.GamePak.ReadProgramROM(address);
             }
 
             //Open bus, apparently
@@ -39,9 +39,9 @@ namespace LotusNES.Core
             //0000 - 1FFF bankswitched CHR rom/ram??
             if (address < 0x2000)
             {
-                if (Emulator.GamePak.UsesCharRAM)
+                if (emu.GamePak.UsesCharRAM)
                 {
-                    Emulator.GamePak.WriteCharRAM(chrBankBase + address, data);
+                    emu.GamePak.WriteCharRAM(chrBankBase + address, data);
                 }
             }
 

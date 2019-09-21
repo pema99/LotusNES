@@ -3,8 +3,11 @@
 namespace LotusNES.Core
 {
     [Serializable]
-    public abstract class MemoryMap
+    public abstract class MemoryMap : Component
     {
+        public MemoryMap(Emulator emu)
+            : base(emu) { }
+
         public abstract byte Read(ushort address);
         public abstract void Write(ushort address, byte data);
 

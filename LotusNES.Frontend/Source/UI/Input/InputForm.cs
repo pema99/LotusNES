@@ -1,14 +1,18 @@
-﻿using System;
+﻿using LotusNES.Core;
+using System;
 using System.Windows.Forms;
 
 namespace LotusNES.Frontend
 {
     public partial class InputForm : DoubleBufferedForm
     {
-        private InputKeyForm inputKeyForm = new InputKeyForm();
+        private InputKeyForm inputKeyForm;
 
-        public InputForm()
+        public InputForm(Emulator emu)
+            : base(emu)
         {
+            inputKeyForm = new InputKeyForm(emu);
+
             InitializeComponent();
         }
 

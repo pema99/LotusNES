@@ -5,8 +5,8 @@ namespace LotusNES.Core
     [Serializable]
     public class NROM : Mapper
     {
-        public NROM()
-            : base(Emulator.GamePak.VerticalVRAMMirroring ? VRAMMirroringMode.Vertical : VRAMMirroringMode.Horizontal)
+        public NROM(Emulator emu)
+            : base(emu, emu.GamePak.VerticalVRAMMirroring ? VRAMMirroringMode.Vertical : VRAMMirroringMode.Horizontal)
         {
         }
 
@@ -15,26 +15,26 @@ namespace LotusNES.Core
             //For PPU
             if (address < 0x2000)
             {
-                return Emulator.GamePak.ReadCharROM(address);
+                return emu.GamePak.ReadCharROM(address);
             }
 
             //Program RAM
             else if (address >= 0x6000 && address < 0x8000)
             {
-                return Emulator.GamePak.ReadProgramRAM(address - 0x6000);
+                return emu.GamePak.ReadProgramRAM(address - 0x6000);
             }
 
             //Program ROM is from 0x8000 - 0xFFFF
             else if (address >= 0x8000)
             {
-                if (Emulator.GamePak.ProgramROMBanks == 1)
+                if (emu.GamePak.ProgramROMBanks == 1)
                 {
                     //Mirror ROM
-                    return Emulator.GamePak.ReadProgramROM((address - 0x8000) % 16384);
+                    return emu.GamePak.ReadProgramROM((address - 0x8000) % 16384);
                 }
                 else
                 {
-                    return Emulator.GamePak.ReadProgramROM(address - 0x8000);
+                    return emu.GamePak.ReadProgramROM(address - 0x8000);
                 }
             }
 
@@ -47,13 +47,13 @@ namespace LotusNES.Core
             //For PPU
             if (address < 0x2000)
             {
-                Emulator.GamePak.WriteCharRAM(address, data);
+                emu.GamePak.WriteCharRAM(address, data);
             }
 
             //Program RAM
             else if (address >= 0x6000 && address < 0x8000)
             {
-                Emulator.GamePak.WriteProgramRAM(address - 0x6000, data);
+                emu.GamePak.WriteProgramRAM(address - 0x6000, data);
             }
         }
     }

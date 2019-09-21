@@ -50,6 +50,7 @@
     <Compile Include="APU\PulseChannel.cs" />
     <Compile Include="APU\Sweep.cs" />
     <Compile Include="APU\TriangleChannel.cs" />
+    <Compile Include="Component.cs" />
     <Compile Include="CPU\CPU.cs" />
     <Compile Include="CPU\CPUMemory.cs" />
     <Compile Include="Emulator.cs" />

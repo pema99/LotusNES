@@ -7,43 +7,43 @@ using System.Linq;
 
 namespace LotusNES.Core
 {
-    public static class Emulator
+    public class Emulator
     {
         //Emulation components
-        public static CPU CPU { get; private set; }
-        public static PPU PPU { get; private set; }
-        public static APU APU { get; private set; }
-        public static GamePak GamePak { get; private set; }
-        public static Mapper Mapper { get; private set; }
-        public static Controller[] Controllers { get; private set; }
+        public CPU CPU { get; private set; }
+        public PPU PPU { get; private set; }
+        public APU APU { get; private set; }
+        public GamePak GamePak { get; private set; }
+        public Mapper Mapper { get; private set; }
+        public Controller[] Controllers { get; private set; }
 
-        public static NetPlayServer NetPlayServer { get; private set; }
-        public static GameGenie GameGenie { get; private set; }
-        public static RewindManager RewindManager { get; private set; }
+        public NetPlayServer NetPlayServer { get; private set; }
+        public GameGenie GameGenie { get; private set; }
+        public RewindManager RewindManager { get; private set; }
 
-        private static Thread EmuThread;
+        private Thread EmuThread;
 
         //Emulation options
-        public static bool Turbo { get; set; }
-        public static double Speed { get; set; }
-        public static bool Pause { get; set; }
-        public static bool DisableAPU { get; set; }
-        public static bool TrackHistory { get; set; }
+        public bool Turbo { get; set; }
+        public double Speed { get; set; }
+        public bool Pause { get; set; }
+        public bool DisableAPU { get; set; }
+        public bool TrackHistory { get; set; }
 
         //State
-        public static EmulatorState State { get; private set; }
-        public static bool Running { get { return State != EmulatorState.Halted; } }
-        public static bool ShouldUpdate { get { return State != EmulatorState.CatchingUp && Running; } }
-        private static bool queueLoad;
-        private static string romPath;
-        private static bool queueSaveState;
-        private static bool queueLoadState;
-        private static string saveStatePath;
+        public EmulatorState State { get; private set; }
+        public bool Running { get { return State != EmulatorState.Halted; } }
+        public bool ShouldUpdate { get { return State != EmulatorState.CatchingUp && Running; } }
+        private bool queueLoad;
+        private string romPath;
+        private bool queueSaveState;
+        private bool queueLoadState;
+        private string saveStatePath;
 
         //Misc
-        public static Action<Exception> ErrorHandler { get; set; }
+        public Action<Exception> ErrorHandler { get; set; }
 
-        public static void Initialize()
+        public Emulator()
         {
             //Set emulation settings
             Turbo = false;
@@ -60,14 +60,14 @@ namespace LotusNES.Core
             saveStatePath = "";
 
             //Init emulator
-            CPU = new CPU();
-            PPU = new PPU();
-            APU = new APU();
+            CPU = new CPU(this);
+            PPU = new PPU(this);
+            APU = new APU(this);
             Controllers = new Controller[] { new Controller(), new Controller() };
 
-            NetPlayServer = new NetPlayServer();
+            NetPlayServer = new NetPlayServer(this);
             GameGenie = new GameGenie();
-            RewindManager = new RewindManager();
+            RewindManager = new RewindManager(this);
 
             //Init emulation thread
             EmuThread = new Thread(EmulationLoop);
@@ -75,25 +75,25 @@ namespace LotusNES.Core
             EmuThread.Start();
         }
 
-        public static void LoadROM(string path)
+        public void LoadROM(string path)
         {
             queueLoad = true;
             romPath = path;
         }
 
-        public static void SaveStateToFile(string path)
+        public void SaveStateToFile(string path)
         {
             queueSaveState = true;
             saveStatePath = path;
         }
 
-        public static void LoadStateFromFile(string path)
+        public void LoadStateFromFile(string path)
         {
             queueLoadState = true;
             saveStatePath = path;
         }
 
-        internal static void WriteStateToStream(Stream stream)
+        internal void WriteStateToStream(Stream stream)
         {
             BinaryFormatter BF = new BinaryFormatter();
             object[] data;
@@ -108,21 +108,28 @@ namespace LotusNES.Core
             BF.Serialize(stream, data);
         }
 
-        internal static void ReadStateFromStream(Stream stream)
+        internal void ReadStateFromStream(Stream stream)
         {
             BinaryFormatter BF = new BinaryFormatter();
             object[] data = (object[])BF.Deserialize(stream);
+            //Make sure to fix dead references from serialization
             CPU = (CPU)data[0];
+            CPU.RefreshEmulatorReference(this);
+            CPU.Memory.RefreshEmulatorReference(this);
             PPU = (PPU)data[1];
+            PPU.RefreshEmulatorReference(this);
+            PPU.Memory.RefreshEmulatorReference(this);
             APU = (APU)data[2];
+            APU.RefreshEmulatorReference(this);
             Mapper = (Mapper)data[3];
+            Mapper.RefreshEmulatorReference(this);
             if (GamePak.UsesCharRAM)
             {
                 GamePak.LoadCharRAM((byte[])data[4]);
             }
         }
 
-        public static void StartRewinding()
+        public void StartRewinding()
         {
             //Don't interrupt existing catchup
             if (ShouldUpdate)
@@ -134,7 +141,7 @@ namespace LotusNES.Core
             }
         }
 
-        public static void StopRewinding()
+        public void StopRewinding()
         {
             if (Running)
             {
@@ -144,7 +151,7 @@ namespace LotusNES.Core
         }
 
         //Main loop
-        private static void EmulationLoop()
+        private void EmulationLoop()
         {          
             while (true)
             {
@@ -162,7 +169,7 @@ namespace LotusNES.Core
             }
         }
 
-        private static void HandleFrame()
+        private void HandleFrame()
         {
             if (!Pause && Running)
             {
@@ -215,7 +222,7 @@ namespace LotusNES.Core
             }
         }
 
-        private static void DoFrame()
+        private void DoFrame()
         {
             bool PreFrame = PPU.OddFrame;
             while (PreFrame == PPU.OddFrame)
@@ -239,7 +246,7 @@ namespace LotusNES.Core
         }
 
         //Save states and rom loading
-        private static void HandleIO()
+        private void HandleIO()
         {
             if (queueLoadState)
             {
@@ -265,7 +272,7 @@ namespace LotusNES.Core
                 queueLoad = false;
 
                 GamePak = new GamePak(romPath);
-                Mapper = Mapper.Create(GamePak);
+                Mapper = Mapper.Create(this);
                 CPU.Reset();
                 PPU.Reset();
                 APU.Reset();

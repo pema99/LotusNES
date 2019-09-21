@@ -3,7 +3,7 @@
 namespace LotusNES.Core
 {
     [Serializable]
-    public class CPU
+    public class CPU : Component
     {
         //Status bitflag bits
         private const byte StatusCarryFlag = 0;
@@ -114,7 +114,8 @@ namespace LotusNES.Core
         private ulong idleCycles;
         private byte opcode;     
 
-        public CPU()
+        public CPU(Emulator emu)
+            : base(emu)
         {
             this.Instructions = new Instruction[256] 
             {
@@ -158,7 +159,7 @@ namespace LotusNES.Core
         #region Processor Functions
         public void Reset()
         {
-            Memory = new CPUMemory();
+            Memory = new CPUMemory(emu);
 
             a = 0;
             x = 0;

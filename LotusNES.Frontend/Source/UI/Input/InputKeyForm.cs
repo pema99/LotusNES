@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using LotusNES.Core;
 
 namespace LotusNES.Frontend
 {
@@ -9,7 +10,8 @@ namespace LotusNES.Frontend
         private int key;
         private Microsoft.Xna.Framework.Input.Keys lastKey;
 
-        public InputKeyForm()
+        public InputKeyForm(Emulator emu)
+            : base(emu)
         {
             InitializeComponent();
         }

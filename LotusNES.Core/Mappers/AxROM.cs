@@ -7,8 +7,8 @@ namespace LotusNES.Core
     {
         private int prgBankBase;
 
-        public AxROM()
-            : base(VRAMMirroringMode.SingleScreenLower)
+        public AxROM(Emulator emu)
+            : base(emu, VRAMMirroringMode.SingleScreenLower)
         {
         }
 
@@ -17,13 +17,13 @@ namespace LotusNES.Core
             //For PPU
             if (address < 0x2000)
             {
-                return Emulator.GamePak.ReadCharROM(address);
+                return emu.GamePak.ReadCharROM(address);
             }
 
             //Program ROM is from 0x8000 - 0xFFFF
             else if (address >= 0x8000)
             {
-                return Emulator.GamePak.ReadProgramROM(prgBankBase + (address - 0x8000));
+                return emu.GamePak.ReadProgramROM(prgBankBase + (address - 0x8000));
             }
 
             //Open bus, apparently
@@ -35,7 +35,7 @@ namespace LotusNES.Core
             //For PPU
             if (address < 0x2000)
             {
-                Emulator.GamePak.WriteCharRAM(address, data);
+                emu.GamePak.WriteCharRAM(address, data);
             }
 
             //Bank select

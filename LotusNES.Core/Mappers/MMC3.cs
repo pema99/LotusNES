@@ -29,8 +29,8 @@ namespace LotusNES.Core
         //MMC6 support
         private bool mmc6;
 
-        public MMC3(bool MMC6 = false)
-            : base(VRAMMirroringMode.Horizontal)
+        public MMC3(Emulator emu, bool MMC6 = false)
+            : base(emu, VRAMMirroringMode.Horizontal)
         {
             this.mmc6 = MMC6;
 
@@ -43,7 +43,7 @@ namespace LotusNES.Core
             this.prgBankBase[1] = 0x2000;
 
             //Start at upper 2 banks
-            this.prgBankBase[2] = Emulator.GamePak.ProgramROMBanks * 0x4000 - 0x4000;
+            this.prgBankBase[2] = emu.GamePak.ProgramROMBanks * 0x4000 - 0x4000;
             this.prgBankBase[3] = prgBankBase[2] + 0x2000;
         }
 
@@ -52,7 +52,7 @@ namespace LotusNES.Core
             //0000 - 1FFF, 8k bankswitched chr rom or ram
             if (address < 0x2000)
             {
-                return Emulator.GamePak.ReadCharROM(chrBankBase[address / 0x400] + (address % 0x400));
+                return emu.GamePak.ReadCharROM(chrBankBase[address / 0x400] + (address % 0x400));
             }
 
             //6000 - 7FFF, non bankswitched prg ram
@@ -60,7 +60,7 @@ namespace LotusNES.Core
             {
                 if (prgRAMEnable)
                 {
-                    return Emulator.GamePak.ReadProgramRAM(address - 0x6000);
+                    return emu.GamePak.ReadProgramRAM(address - 0x6000);
                 }
             }
 
@@ -68,7 +68,7 @@ namespace LotusNES.Core
             else if (address >= 0x8000)
             {
                 address -= 0x8000;
-                return Emulator.GamePak.ReadProgramROM(prgBankBase[address / 0x2000] + (address % 0x2000));
+                return emu.GamePak.ReadProgramROM(prgBankBase[address / 0x2000] + (address % 0x2000));
             }
 
             return 0;
@@ -79,7 +79,7 @@ namespace LotusNES.Core
             //0000 - 1FFF, 8k bankswitched chr rom or ram
             if (address < 0x2000)
             {
-                Emulator.GamePak.WriteCharRAM(chrBankBase[address / 0x400] + (address % 0x400), data);
+                emu.GamePak.WriteCharRAM(chrBankBase[address / 0x400] + (address % 0x400), data);
             }
 
             //6000 - 7FFF, non bankswitched prg ram
@@ -87,7 +87,7 @@ namespace LotusNES.Core
             {
                 if (!writeProtect)
                 {
-                    Emulator.GamePak.WriteProgramRAM(address - 0x6000, data);
+                    emu.GamePak.WriteProgramRAM(address - 0x6000, data);
                 }
             }
 
@@ -103,7 +103,7 @@ namespace LotusNES.Core
             //When using 8x8 sprites, if the BG uses $0000, and the sprites use $1000, the IRQ counter should decrement on PPU cycle 260.
             //When using 8x8 sprites, if the BG uses $1000, and the sprites use $0000, the IRQ counter should decrement on PPU cycle 324.
             //TODO: When using 8x16 sprites PPU A12 must be explicitly tracked. 
-            byte ppuctrl = Emulator.PPU.GetRegister(0x2000);
+            byte ppuctrl = emu.PPU.GetRegister(0x2000);
             bool bg = (ppuctrl & 0b00010000) != 0;
             bool sprite = (ppuctrl & 0b00001000) != 0;
 
@@ -111,7 +111,7 @@ namespace LotusNES.Core
             int irqCycle = (bg && !sprite) ? 324 : 260;
 
             //  When PPU rendering        Count visible scanlines        At a specific cycle
-            if (Emulator.PPU.Rendering && Emulator.PPU.Scanline < 240 && Emulator.PPU.Cycle == irqCycle)
+            if (emu.PPU.Rendering && emu.PPU.Scanline < 240 && emu.PPU.Cycle == irqCycle)
             {
                 if (irqCounter == 0) //Reload counter
                 {
@@ -122,7 +122,7 @@ namespace LotusNES.Core
                     irqCounter--;
                     if (irqCounter == 0 && irqEnable)
                     {
-                        Emulator.CPU.RequestIRQ();
+                        emu.CPU.RequestIRQ();
                     }
                 }
             }
@@ -219,27 +219,27 @@ namespace LotusNES.Core
             //Bottom diagram on nesdev
             if (prgROMBankMode) //is $80
             {
-                prgBankBase[0] = Emulator.GamePak.ProgramROMBanks * 0x4000 - 0x4000;
+                prgBankBase[0] = emu.GamePak.ProgramROMBanks * 0x4000 - 0x4000;
                 prgBankBase[1] = bankRegisters[7] * 0x2000;
                 prgBankBase[2] = bankRegisters[6] * 0x2000;
-                prgBankBase[3] = Emulator.GamePak.ProgramROMBanks * 0x4000 - 0x2000;
+                prgBankBase[3] = emu.GamePak.ProgramROMBanks * 0x4000 - 0x2000;
             }
             else //is $00
             {
                 prgBankBase[0] = bankRegisters[6] * 0x2000;
                 prgBankBase[1] = bankRegisters[7] * 0x2000;
-                prgBankBase[2] = Emulator.GamePak.ProgramROMBanks * 0x4000 - 0x4000;
-                prgBankBase[3] = Emulator.GamePak.ProgramROMBanks * 0x4000 - 0x2000;
+                prgBankBase[2] = emu.GamePak.ProgramROMBanks * 0x4000 - 0x4000;
+                prgBankBase[3] = emu.GamePak.ProgramROMBanks * 0x4000 - 0x2000;
             }
 
             for (int i = 0; i < prgBankBase.Length; i++)
             {
-                prgBankBase[i] %= Emulator.GamePak.ProgramROMLength;
+                prgBankBase[i] %= emu.GamePak.ProgramROMLength;
             }
 
             for (int i = 0; i < chrBankBase.Length; i++)
             {
-                chrBankBase[i] %= Emulator.GamePak.CharROMLength;
+                chrBankBase[i] %= emu.GamePak.CharROMLength;
             }
         }
     }

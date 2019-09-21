@@ -3,7 +3,7 @@
 namespace LotusNES.Core
 {
     [Serializable]
-    public class APU
+    public class APU : Component
     {
         //Constants
         public const int SampleRate = 45000; //Sample rate for apu slightly higher than audio api sample rate to prevent popping
@@ -73,6 +73,9 @@ namespace LotusNES.Core
         private float[] audioBuffer = new float[BufferSize * 5];
         private int audioBufferIndex;
 
+        public APU(Emulator emu)
+            : base(emu) { }
+
         public void Reset()
         {
             this.pulse = new PulseChannel[] { new PulseChannel(), new PulseChannel(true) };
@@ -127,7 +130,7 @@ namespace LotusNES.Core
                     }
                     if (seq == 3 && !frameCounterBlockIRQ)
                     {
-                        Emulator.CPU.RequestIRQ();
+                        emu.CPU.RequestIRQ();
                     }
                 }
                 frameStep++;

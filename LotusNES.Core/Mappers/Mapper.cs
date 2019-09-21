@@ -6,11 +6,12 @@ using System.Xml;
 namespace LotusNES.Core
 {
     [Serializable]
-    public abstract class Mapper
+    public abstract class Mapper : Component
     {
         public VRAMMirroringMode VRAMMirroring { get; set; }
 
-        protected Mapper(VRAMMirroringMode vramMirroring)
+        protected Mapper(Emulator emu, VRAMMirroringMode vramMirroring)
+            : base(emu)
         {
             this.VRAMMirroring = vramMirroring;
         }
@@ -49,54 +50,54 @@ namespace LotusNES.Core
         }
 
         //Mapper list
-        public static Mapper Create(GamePak gamePak)
+        public static Mapper Create(Emulator emu)
         {
             //Check special cases using checksum
-            switch (gamePak.Checksum)
+            switch (emu.GamePak.Checksum)
             {
                 //StarTropics 1 and 2
                 case "74C53FE9AC779F146C59AC01E701C9BF912B3C7B":
                 case "88F0DFA7F034B95308BC04E2A0A38FFB2320268B":
                 case "FCB1EF7398B842EBD28C3227852D7A132CE7B887":
-                    return new MMC3(true);
+                    return new MMC3(emu, true);
 
                 default:
                     break;
             }
 
             //First see if checksum is in database
-            int mapperID = gamePak.MapperID;
-            if (CartDB.ContainsKey(gamePak.Checksum))
+            int mapperID = emu.GamePak.MapperID;
+            if (CartDB.ContainsKey(emu.GamePak.Checksum))
             {
-                mapperID = CartDB[gamePak.Checksum];
+                mapperID = CartDB[emu.GamePak.Checksum];
             }
 
             //Else default to mapper ID from file
             switch (mapperID)
             {
                 case 0:
-                    return new NROM();
+                    return new NROM(emu);
 
                 case 1:
-                    return new MMC1();
+                    return new MMC1(emu);
 
                 case 2:
                 case 71:
-                    return new UxROM();
+                    return new UxROM(emu);
 
                 case 3:
-                    return new CNROM();
+                    return new CNROM(emu);
 
                 case 4:
                 case 206:
-                    return new MMC3();
+                    return new MMC3(emu);
 
                 case 7:
-                    return new AxROM();
+                    return new AxROM(emu);
 
                 case 66:
                 case 11:
-                    return new GxROM();
+                    return new GxROM(emu);
 
                 default:
                     throw new Exception("Unimplemented mapper");

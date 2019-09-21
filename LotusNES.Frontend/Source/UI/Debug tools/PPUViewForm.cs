@@ -12,7 +12,8 @@ namespace LotusNES.Frontend
         private FastBitmap patternTableB;
         private int selectedPalette;
 
-        public PPUViewForm()
+        public PPUViewForm(Emulator emu)
+            : base(emu)
         {       
             InitializeComponent();
 
@@ -28,7 +29,7 @@ namespace LotusNES.Frontend
 
         private void TimerUpdate_Tick(object sender, EventArgs e)
         {
-            if (Visible && Emulator.Running)
+            if (Visible && emu.Running)
             {
                 DrawPatternTable(patternTableA, 0);
                 DrawPatternTable(patternTableB, 1);
@@ -51,10 +52,10 @@ namespace LotusNES.Frontend
                     {
                         for (int y = 0; y < 8; y++)
                         {
-                            byte colLSB = Emulator.PPU.Memory.Read((ushort)(0x1000 * patternTableNum + tileNum * 16 + y));
-                            byte colMSB = Emulator.PPU.Memory.Read((ushort)(0x1000 * patternTableNum + tileNum * 16 + 8 + y));
+                            byte colLSB = emu.PPU.Memory.Read((ushort)(0x1000 * patternTableNum + tileNum * 16 + y));
+                            byte colMSB = emu.PPU.Memory.Read((ushort)(0x1000 * patternTableNum + tileNum * 16 + 8 + y));
                             int colNum = ((colLSB >> (7 - x)) & 0b01) | ((colMSB >> (7 - x) << 1) & 0b10);
-                            byte pixel = Emulator.PPU.Memory.Read((ushort)(0x3F00 + (selectedPalette * 4) + colNum));
+                            byte pixel = emu.PPU.Memory.Read((ushort)(0x3F00 + (selectedPalette * 4) + colNum));
                             pixel &= 0b111111;
                             
                             bmp.SetPixel(i * 8 + x, j * 8 + y, PaletteMap.MapNET(pixel));
@@ -88,7 +89,7 @@ namespace LotusNES.Frontend
 
         private void PicturePalettes_Paint(object sender, PaintEventArgs e)
         {
-            if (Emulator.Running)
+            if (emu.Running)
             {
                 int tileW = PicturePalettes.Width / 16;
                 int tileH = PicturePalettes.Height / 2;
@@ -98,7 +99,7 @@ namespace LotusNES.Frontend
                     {
                         using (Pen p = new Pen(Color.White))
                         {
-                            byte paletteCol = Emulator.PPU.Memory.Read((ushort)(0x3F00 + i + j * 16));
+                            byte paletteCol = emu.PPU.Memory.Read((ushort)(0x3F00 + i + j * 16));
                             paletteCol &= 0b111111;
                             p.Color = PaletteMap.MapNET(paletteCol);
                             e.Graphics.FillRectangle(p.Brush, i * tileW, j * tileH, tileW, tileH);

@@ -7,7 +7,8 @@ namespace LotusNES.Core
     {
         private byte[] RAM;
 
-        public CPUMemory()
+        public CPUMemory(Emulator emu)
+            : base(emu)
         {
             this.RAM = new byte[0x0800];
         }
@@ -25,7 +26,7 @@ namespace LotusNES.Core
             //8 byte PPU registers, mirrored every 8 bits till 0x4000
             else if (address < 0x4000 || address == 0x4014)
             {
-                result = Emulator.PPU.GetRegister(HandlePPURegisterMirroring(address));
+                result = emu.PPU.GetRegister(HandlePPURegisterMirroring(address));
             }
 
             //18 byte APU and IO registers
@@ -34,15 +35,15 @@ namespace LotusNES.Core
                 //TODO: Implement APU
                 if (address == 0x4016)
                 {
-                    result = Emulator.Controllers[0].ReadControllerRegister();
+                    result = emu.Controllers[0].ReadControllerRegister();
                 }
                 else if (address == 0x4017)
                 {
-                    result = Emulator.Controllers[1].ReadControllerRegister();
+                    result = emu.Controllers[1].ReadControllerRegister();
                 }
                 else if (address == 0x4015)
                 {
-                    result = Emulator.APU.GetStatusRegister();
+                    result = emu.APU.GetStatusRegister();
                 }
             }
 
@@ -54,13 +55,13 @@ namespace LotusNES.Core
             //Everything after 0x401F is cartridge space
             else
             {
-                result = Emulator.Mapper.Read(address);
+                result = emu.Mapper.Read(address);
             }
 
             //If GameGenie enabled, intercept
-            if (Emulator.GameGenie.Enabled)
+            if (emu.GameGenie.Enabled)
             {
-                return Emulator.GameGenie.Read(address, result);
+                return emu.GameGenie.Read(address, result);
             }
             return result;
         }      
@@ -76,7 +77,7 @@ namespace LotusNES.Core
             //8 byte PPU registers, mirrored every 8 bits till 0x4000
             else if (address < 0x4000 || address == 0x4014)
             {
-                Emulator.PPU.SetRegister(HandlePPURegisterMirroring(address), data);
+                emu.PPU.SetRegister(HandlePPURegisterMirroring(address), data);
             }
 
             //18 byte APU and IO registers
@@ -85,12 +86,12 @@ namespace LotusNES.Core
                 //Strobe both controllers
                 if (address == 0x4016 || address == 0x4017)
                 {                
-                    Emulator.Controllers[0].WriteControllerRegister(data);
-                    Emulator.Controllers[1].WriteControllerRegister(data); //TODO: Is this right, or should it only strobe on 0x4016
+                    emu.Controllers[0].WriteControllerRegister(data);
+                    emu.Controllers[1].WriteControllerRegister(data); //TODO: Is this right, or should it only strobe on 0x4016
                 }
                 else
                 {
-                    Emulator.APU.SetRegister(address, data);
+                    emu.APU.SetRegister(address, data);
                 }
             }
 
@@ -102,7 +103,7 @@ namespace LotusNES.Core
             //Everything after 0x401F is cartridge space
             else
             {
-                Emulator.Mapper.Write(address, data);
+                emu.Mapper.Write(address, data);
             }
         }
 

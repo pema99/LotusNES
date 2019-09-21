@@ -21,6 +21,7 @@ namespace LotusNES.Frontend
         public Keys[,] Controls { get; private set; }
 
         //State
+        private Emulator emu;
         private Color[] frameBuffer;
         private Texture2D frameBufferTexture;
         public bool ExitRequest { get; set; }
@@ -29,8 +30,9 @@ namespace LotusNES.Frontend
         private DynamicSoundEffectInstance sound;
         private byte[] audioBuffer;
         
-        public MainViewport()
+        public MainViewport(Emulator emu)
         {
+            this.emu = emu;
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = screenWidth * screenScale;
             graphics.PreferredBackBufferHeight = screenHeight * screenScale;
@@ -74,7 +76,7 @@ namespace LotusNES.Frontend
                 Exit();
             }
 
-            if (Emulator.Running && Emulator.ShouldUpdate)
+            if (emu.Running && emu.ShouldUpdate)
             {
                 //Handle audio, don't store too many buffers or we will lag
                 if (sound.PendingBufferCount < 5)
@@ -90,15 +92,15 @@ namespace LotusNES.Frontend
                 //Draw frame
                 for (int i = 0; i < screenWidth * screenHeight; i++)
                 {
-                    frameBuffer[i] = PaletteMap.MapXNA(Emulator.PPU.FrameBuffer[i]);
+                    frameBuffer[i] = PaletteMap.MapXNA(emu.PPU.FrameBuffer[i]);
                 }
 
                 //Get input from peer
-                if (Emulator.NetPlayServer.Running)
+                if (emu.NetPlayServer.Running)
                 {                                
-                    while (Emulator.NetPlayServer.GetPeerInputAvailable())
+                    while (emu.NetPlayServer.GetPeerInputAvailable())
                     {
-                        Emulator.Controllers[1].SetButtons(Emulator.NetPlayServer.GetPeerInput());
+                        emu.Controllers[1].SetButtons(emu.NetPlayServer.GetPeerInput());
                     }
                 }
 
@@ -114,7 +116,7 @@ namespace LotusNES.Frontend
 
             sb.Begin(samplerState: SamplerState.PointClamp);
 
-            if (Emulator.GamePak != null)
+            if (emu.GamePak != null)
             {
                 //FrameBuffer
                 sb.Draw(frameBufferTexture, GraphicsDevice.Viewport.Bounds, Color.White);
@@ -123,9 +125,9 @@ namespace LotusNES.Frontend
             sb.End();
 
             //Send new frame to peer
-            if (Emulator.NetPlayServer.Running)
+            if (emu.NetPlayServer.Running)
             {
-                Emulator.NetPlayServer.SendPeerFrameBuffer(); //TODO: ONLY SEND NEW PPU FRAMES
+                emu.NetPlayServer.SendPeerFrameBuffer(); //TODO: ONLY SEND NEW PPU FRAMES
             }
 
             base.Draw(gameTime);
@@ -147,15 +149,15 @@ namespace LotusNES.Frontend
                     KB.IsKeyDown(Controls[player, 6]) || GP.IsButtonDown(Buttons.LeftThumbstickLeft)  || GP.IsButtonDown(Buttons.DPadLeft),
                     KB.IsKeyDown(Controls[player, 7]) || GP.IsButtonDown(Buttons.LeftThumbstickRight) || GP.IsButtonDown(Buttons.DPadRight),
             };
-            Emulator.Controllers[player].SetButtons(inputs);
+            emu.Controllers[player].SetButtons(inputs);
         }
 
         private void HandleAudio()
         {
             //If enough has been gathered to submit, do so
-            if (Emulator.APU.GetAudioBufferReady())
+            if (emu.APU.GetAudioBufferReady())
             {
-                float[] buffer = Emulator.APU.GetAudioBuffer();
+                float[] buffer = emu.APU.GetAudioBuffer();
 
                 for (int i = 0; i < APU.BufferSize; i++)
                 {

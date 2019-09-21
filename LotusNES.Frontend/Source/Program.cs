@@ -14,8 +14,8 @@ namespace LotusNES.Frontend
         static void Main(string[] args)
         {
             //Init emulator
-            Emulator.Initialize();
-            Emulator.ErrorHandler = (e) => {
+            Emulator emu = new Emulator();
+            emu.ErrorHandler = (e) => {
                 MessageBox.Show(
                     string.Format("Emulation error occurred: {0}", e.Message),
                     "Error",
@@ -34,7 +34,7 @@ namespace LotusNES.Frontend
                     {
                         case "-f":
                             i++;
-                            Emulator.LoadROM(args[i]);
+                            emu.LoadROM(args[i]);
                             break;
 
                         case "-h":
@@ -49,8 +49,8 @@ namespace LotusNES.Frontend
             if (!headless)
             {
                 Application.EnableVisualStyles();
-                Form = new MainForm();
-                Viewport = new MainViewport();
+                Form = new MainForm(emu);
+                Viewport = new MainViewport(emu);
                 Form.Show();
                 Viewport.Run();
             }

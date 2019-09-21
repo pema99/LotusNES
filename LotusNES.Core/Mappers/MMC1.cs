@@ -23,15 +23,15 @@ namespace LotusNES.Core
         private int[] chrBankBase;
         private int[] prgBankBase;
 
-        public MMC1()
-            : base(Emulator.GamePak.VerticalVRAMMirroring ? VRAMMirroringMode.Vertical : VRAMMirroringMode.Horizontal)
+        public MMC1(Emulator emu)
+            : base(emu, emu.GamePak.VerticalVRAMMirroring ? VRAMMirroringMode.Vertical : VRAMMirroringMode.Horizontal)
         {
             this.shiftRegister = 0x10;
 
             this.prgBankBase = new int[2];
             this.chrBankBase = new int[2];
 
-            this.prgBankBase[1] = (Emulator.GamePak.ProgramROMBanks - 1) * 0x4000;
+            this.prgBankBase[1] = (emu.GamePak.ProgramROMBanks - 1) * 0x4000;
 
             this.chrROMBankMode = false;
             this.prgROMBankMode = 3;
@@ -42,20 +42,20 @@ namespace LotusNES.Core
             //0000 - 1FFF is CHR rom banks, 2
             if (address < 0x2000)
             {
-                return Emulator.GamePak.ReadCharROM((chrBankBase[address / 0x1000] + address % 0x1000) % Emulator.GamePak.CharROMLength);
+                return emu.GamePak.ReadCharROM((chrBankBase[address / 0x1000] + address % 0x1000) % emu.GamePak.CharROMLength);
             }
 
             //Program RAM, not bank switched
             if (address >= 0x6000 && address < 0x8000)
             {
-                return Emulator.GamePak.ReadProgramRAM(address - 0x6000);
+                return emu.GamePak.ReadProgramRAM(address - 0x6000);
             }
 
             //8000 - FFFE is PRG ROM banks, 2
             else if (address >= 0x8000)
             {
                 address -= 0x8000;
-                return Emulator.GamePak.ReadProgramROM(prgBankBase[address / 0x4000] + address % 0x4000);
+                return emu.GamePak.ReadProgramROM(prgBankBase[address / 0x4000] + address % 0x4000);
             }
 
             //Open bus, apparently
@@ -70,13 +70,13 @@ namespace LotusNES.Core
             //For PPU
             if (address < 0x2000)
             {
-                Emulator.GamePak.WriteCharRAM((chrBankBase[address / 0x1000] + address % 0x1000) % Emulator.GamePak.CharROMLength, data);
+                emu.GamePak.WriteCharRAM((chrBankBase[address / 0x1000] + address % 0x1000) % emu.GamePak.CharROMLength, data);
             }
 
             //Program RAM
             else if (address >= 0x6000 && address < 0x8000)
             {
-                Emulator.GamePak.WriteProgramRAM(address - 0x6000, data);
+                emu.GamePak.WriteProgramRAM(address - 0x6000, data);
             }
 
             //Shift register for writing to internal registers
@@ -183,7 +183,7 @@ namespace LotusNES.Core
                     
                 case 3: //Switch 16k lower bank, fix upper at C000
                     prgBankBase[0] = (prgBankRegister & 0b1111) * 0x4000;
-                    prgBankBase[1] = (Math.Min(16, Emulator.GamePak.ProgramROMBanks) - 1) * 0x4000; //Top bank
+                    prgBankBase[1] = (Math.Min(16, emu.GamePak.ProgramROMBanks) - 1) * 0x4000; //Top bank
                     break;
             }
         }

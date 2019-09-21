@@ -5,7 +5,8 @@ namespace LotusNES.Frontend
 {
     public partial class GameGenieForm : DoubleBufferedForm
     {
-        public GameGenieForm()
+        public GameGenieForm(Emulator emu)
+            : base(emu)
         {
             InitializeComponent();
         }
@@ -25,12 +26,12 @@ namespace LotusNES.Frontend
                     control.Enabled = CheckToggle.Checked;
                 }
             }
-            Emulator.GameGenie.Enabled = CheckToggle.Checked;
+            emu.GameGenie.Enabled = CheckToggle.Checked;
         }
 
         private void ButtonAdd_Click(object sender, System.EventArgs e)
         {
-            if (Emulator.GameGenie.AddCode(InputCode.Text))
+            if (emu.GameGenie.AddCode(InputCode.Text))
             {
                 ListCodes.Items.Add(InputCode.Text);
             }
@@ -38,7 +39,7 @@ namespace LotusNES.Frontend
 
         private void ButtonRemove_Click(object sender, System.EventArgs e)
         {
-            if (Emulator.GameGenie.RemoveCode((string)ListCodes.SelectedItem))
+            if (emu.GameGenie.RemoveCode((string)ListCodes.SelectedItem))
             {
                 ListCodes.Items.Remove((string)ListCodes.SelectedItem);
             }

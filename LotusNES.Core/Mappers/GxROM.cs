@@ -8,8 +8,8 @@ namespace LotusNES.Core
         private int prgBankBase;
         private int chrBankBase;
 
-        public GxROM()
-            : base(Emulator.GamePak.VerticalVRAMMirroring ? VRAMMirroringMode.Vertical : VRAMMirroringMode.Horizontal)
+        public GxROM(Emulator emu)
+            : base(emu, emu.GamePak.VerticalVRAMMirroring ? VRAMMirroringMode.Vertical : VRAMMirroringMode.Horizontal)
         {
         }
 
@@ -18,13 +18,13 @@ namespace LotusNES.Core
             //For PPU
             if (address < 0x2000)
             {
-                return Emulator.GamePak.ReadCharROM(chrBankBase + address);
+                return emu.GamePak.ReadCharROM(chrBankBase + address);
             }
 
             //Program ROM is from 0x8000 - 0xFFFF
             else if (address >= 0x8000)
             {
-                return Emulator.GamePak.ReadProgramROM(prgBankBase + (address - 0x8000));
+                return emu.GamePak.ReadProgramROM(prgBankBase + (address - 0x8000));
             }
 
             //Open bus, apparently
@@ -36,13 +36,13 @@ namespace LotusNES.Core
             //For PPU
             if (address < 0x2000)
             {
-                Emulator.GamePak.WriteCharRAM(chrBankBase + address, data);
+                emu.GamePak.WriteCharRAM(chrBankBase + address, data);
             }
 
             //Bank select
             else if (address >= 0x8000)
             {
-                if (Emulator.GamePak.MapperID == 11) //Color dreams bootleg games
+                if (emu.GamePak.MapperID == 11) //Color dreams bootleg games
                 {
                     prgBankBase = (data & 0b00000011) * 0x8000;
                     chrBankBase = ((data & 0b11110000) >> 4) * 0x2000;
